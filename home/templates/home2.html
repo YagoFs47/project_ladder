@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static 'css/home2.css' %}">
+<script defer src="{% static 'js/home2.js' %}">
+    
+</script>
+{% endblock %}
+
+{% block body %}
+    <main id="main-content">
+        <h1 id="title">LADDER ELITE MURIEL</h1>
+
+        <section id="matchups">
+            <ul id="matchups-table">
+                <!-- para cada partida -->
+                {% for matchup in matchups %}
+                    <li id="{{matchup.id}}" class="matchup-item" data-matchup-id="{{matchup.id}}">
+
+                        <span class="title-matchup">
+                            {{matchup.name}}
+                            <span>
+                                <i class="bi bi-box-arrow-up-right open-matchup" onclick="openMatchup('{{matchup.id}}')"></i>
+                                <i class="bi bi-caret-down-fill show-detail-matchup" onclick="openMatchupLayout('{{matchup.id}}', this)"></i>
+                            </span>
+                        </span>
+
+                        <div class="matchup-detail hidden">
+                            <ul class="matchup-markets">
+
+                                <!-- para cada mercado da partida -->
+                                 <!-- lista de mercados -->
+                                {% for market in matchup.markets %}
+                                    <li class="market-item">
+                                        <span class="title-market">
+                                            MAIS / MENOS {{market.handicap}}
+                                            <i class="bi bi-caret-down show-detail-market"></i>
+                                        </span>
+                                        <div class="market-detail hidden">
+                                            
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+{% endblock %}

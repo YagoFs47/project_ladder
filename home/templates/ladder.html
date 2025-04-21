@@ -1,0 +1,79 @@
+{% load pool_extras %}
+
+<ul class="matchup-markets">
+    {% for market in markets.markets %}
+        {% if market.name == 'Total' %}
+            <li id="{{market.id}}" class="market-item" data-market-id="{{market.id}}" data-event-id="{{market|get_item:'event-id'}}">
+                <span class="title-market">
+                    {{market.name}} {{market.handicap}}
+                    <span>
+                        <input 
+                        class="select-market" 
+                        type="radio" 
+                        name="{{market|get_name_radio:'event-id'}}"
+                        onclick="setMarketExtesion('{{market.id}}', `{{market|get_item:'event-id'}}`)"
+                        >
+                        <i class="bi bi-caret-down show-detail-market" onclick="openMarketLayout('{{market.id}}', this)"></i>
+                    </span>
+                </span>
+                <div class="market-detail hidden">
+                    <!-- {% for runner in market.runners %}
+                        <div class="market-runner">
+                            <div class="runner-item title-back-lay">
+                                {{runner.name}}
+                            </div>
+                            {% for price in runner.prices %}
+                                <div class="runner-item-price back-lay {{price.side}}">
+                                    {{price.odds}}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %} -->
+                    
+                    <ul class="market-ladder hidden">
+                        {% for ladder_item in market.ladder %}
+                            <li 
+                                class="ladder-item ladder-item-lay" 
+                                data-odd-value="{{ladder_item.odd}}" 
+                                data-market-value="{{market.handicap}}" 
+                                data-event-id="{{market|get_item:'event-id'}}"
+                                data-market-id="{{market.id}}"
+                                data-side="lay"
+                                data-runner-id="{{market.runners.1.id}}"
+                                onclick="sendEventClickLadder(this)">
+                                {{ladder_item.back}}
+                            </li>
+                            <li 
+                            class="ladder-item ladder-item-odd" 
+                            data-odd-value="{{ladder_item.odd}}" 
+                            data-market-value="{{market.handicap}}" 
+                            data-market-id="{{market.id}}"
+                            data-runner-id="{{market.runners.1.id}}">
+                                {{ladder_item.odd}}
+                            </li>
+                            <li 
+                                class="ladder-item ladder-item-back" 
+                                data-odd-value="{{ladder_item.odd}}" 
+                                data-side="back"
+                                data-event-id="{{market|get_item:'event-id'}}"
+                                data-market-value="{{market.handicap}}" 
+                                data-market-id="{{market.id}}"
+                                data-runner-id="{{market.runners.1.id}}"
+                                onclick="sendEventClickLadder(this)">
+                                {{ladder_item.lay}}
+                            </li>
+                            <li class="ladder-item ladder-item-empty" 
+                                data-odd-value="{{ladder_item.odd}}" 
+                                data-market-value="{{market.handicap}}" 
+                                data-event-id="{{market|get_item:'event-id'}}"
+                                data-market-id="{{market.id}}"
+                                data-runner-id="{{market.runners.1.id}}">
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

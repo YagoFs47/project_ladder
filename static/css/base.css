@@ -1,0 +1,127 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0px;
+    padding: 0px;
+}
+
+.events-table{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    list-style: none;
+    row-gap: .2rem;
+    padding: 3rem;
+    min-width: 500px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.event-item{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: left;
+    border: 1px solid black;
+    grid-template-columns: 1fr 1fr 1fr 200px;
+}
+
+.event-item:hover{
+    background-color: rgba(128, 128, 128, 0.281);
+}
+
+.time-event{
+    display: flex;
+    background-color: #58D177;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    font-weight: 500;
+    font-size: 1rem;
+    color: white;
+    
+}
+
+.score-event{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: #0B9E31;
+    align-items: center;
+    width: 1rem;
+    margin-right: .5rem;
+    padding: .2rem;
+}
+
+.score-event > p{
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: white;
+}
+
+.detail-event{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: .5rem;
+    width: 100%;
+    flex-wrap: nowrap;
+    flex-flow: column;
+}
+.detail-event > h2{
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-wrap: nowrap;
+}
+
+.moneyline{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    padding-right: 1rem;
+    flex-basis: 100%;
+    flex-wrap: nowrap;
+    /* width: 100%; */
+}
+
+.block-moneyline{
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.back-lay{
+    display: flex;
+    text-align: center;
+    height: 100%;
+}
+
+.title-moneyline{
+    background-color: rgb(55, 65, 81);
+    height: fit-content;
+    color: white;
+    font-weight: 500;
+    align-items: center;
+}
+
+.back-odd, .lay-odd{
+    padding: 0.5rem;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.back-odd{
+    background-color: #A2D4F2;
+    min-width: 38px;
+}
+
+.lay-odd{
+    background-color: #F2C4D0;
+    min-width: 38px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}

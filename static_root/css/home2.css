@@ -1,0 +1,273 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    color: white;
+    margin: 0px;
+    padding: 0px;
+}
+
+.hidden{
+    display: none !important; 
+    visibility: hidden;
+}
+
+body {
+    background-color: #0d0d0d;
+}
+.loader {
+    width: 24px;
+    height: 24px;
+    border: 5px solid #FFF;
+    border-bottom-color: #FF3D00;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    margin-right: 5px;
+    margin-top: 5px;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+} 
+  
+
+#main-content{
+    margin-top: 1rem;
+    margin: 1rem 1rem;
+}
+
+#matchups-table{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin: auto;
+    margin-top: 1rem;
+    row-gap: 1rem;
+}
+
+.matchup-item{
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: .5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: 
+    "title title"
+    "content content"
+    ;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+i.show-detail-matchup{
+    grid-area: icone;
+    max-width: fit-content;
+    align-content: flex-end;
+}
+
+i.show-detail-market{
+    color: black;
+}
+
+i.open-matchup{
+    margin-right: .5rem;
+    cursor: pointer;
+}
+
+
+.title-matchup{
+    grid-area: title;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+
+div.matchup-detail.hidden{
+    grid-area: content;
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+}
+
+div.matchup-detail.active{
+    grid-area: content;
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+    animation-name: slideUp;
+    animation-duration: .5s;
+}
+
+
+@keyframes slideUp {
+    from {
+      transform: translateY(10%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+.matchup-markets{
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    row-gap: .5rem;
+}
+
+li.market-item{
+    font-size: large;
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    text-align: start;
+    padding: .5rem;
+    background-color: #b6d4e7;
+    border-radius: 5px;
+    height: 1.5rem;
+}
+
+li.market-item.active{
+    height: fit-content;
+}
+
+@keyframes marketUp {
+    from{
+        height: 1.5rem;
+    }
+    to{
+        height: 15rem;
+    }
+    
+}
+
+span.title-market{
+    display: flex;
+    justify-content: space-between;
+    color: black;
+}
+
+span.title-market > i{
+    color: black;
+    height: 24px;
+    width: 24px;
+}
+
+div.market-detail{
+    width: 100%;
+    margin-top: 1rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    row-gap: 2px;
+}
+
+div.market-runner{
+    width: 100%;
+    padding: 0 .5rem;
+    display: grid;
+    box-sizing: border-box;
+    grid-template-columns: 2fr repeat(6, 1fr);
+}
+
+div.title-back-lay{
+    text-align: start;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    color: black;
+}
+
+div.back-lay{
+    border: 1px solid grey;
+    color: black;
+    font-size: 15px;
+}
+
+div.back{
+    background-color: #A0D3F2;
+}
+
+div.lay{
+    background-color: #F2C2CF;
+}
+
+.market-ladder{
+    margin: 2rem auto;
+    display: grid;
+    list-style: none;
+    grid-template-columns: repeat(4, 1fr);   
+    padding: .5rem;
+    scrollbar-width: 5px;
+    overflow: scroll;
+    max-height: 500px;
+}
+
+li.ladder-item{
+    text-align: center;
+    align-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid black;
+    padding: .05rem .5rem;
+    min-width: 50px;
+
+}
+
+li.ladder-item:hover{
+    background-color: blueviolet;
+}
+
+li.ladder-item-empty{
+    color: black;
+}
+
+li.ladder-item-lay{
+    background-color: #994f63;
+}
+
+li.ladder-item-lay{
+    background-color: #994f63;
+    color: white;
+}
+
+li.ladder-item-odd{
+    background-color: #98D996;
+    color: black;
+}
+
+li.ladder-item-back{
+    background-color: #2d6c94;
+    color: white;
+}
+
+input.select-market{
+    background-color: grey;
+    margin-right: .5rem;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+input.select-market:hover{
+    color: grey;
+}
+
