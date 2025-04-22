@@ -28,6 +28,17 @@ files = [
 ]
 
 [[package]]
+name = "antiorm"
+version = "1.2.1"
+description = "A Pythonic Helper for DBAPI-2.0 SQL Access"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "antiorm-1.2.1.tar.gz", hash = "sha256:96eb1841ce5163db4cf1dc13f4499ec2d7cffc190cf724b78ffdd3e6b7c4ff93"},
+]
+
+[[package]]
 name = "anyio"
 version = "4.9.0"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -516,6 +527,34 @@ twisted = {version = ">=22.4", extras = ["tls"]}
 
 [package.extras]
 tests = ["django", "hypothesis", "pytest", "pytest-asyncio"]
+
+[[package]]
+name = "db"
+version = "0.1.1"
+description = "Databases for Humans"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "db-0.1.1.tar.gz", hash = "sha256:980e772f15c1161d3b287ffec4f144e40961b0b3e6d5102809577870bf6c5808"},
+]
+
+[package.dependencies]
+antiorm = "*"
+
+[[package]]
+name = "db-sqlite3"
+version = "0.0.1"
+description = "sqlite3 driver for db"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "db-sqlite3-0.0.1.tar.gz", hash = "sha256:4dd410aa28a2c5b66de477f9dc62f523133217dd31c7ed7eb085214bea148db9"},
+]
+
+[package.dependencies]
+db = "*"
 
 [[package]]
 name = "django"
@@ -1128,6 +1167,17 @@ files = [
     {file = "PySocks-1.7.1-py27-none-any.whl", hash = "sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299"},
     {file = "PySocks-1.7.1-py3-none-any.whl", hash = "sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5"},
     {file = "PySocks-1.7.1.tar.gz", hash = "sha256:3f8804571ebe159c380ac6de37643bb4685970655d3bba243530d6558b799aa0"},
+]
+
+[[package]]
+name = "pysqlite3"
+version = "0.5.4"
+description = "DB-API 2.0 interface for Sqlite 3.x"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "pysqlite3-0.5.4.tar.gz", hash = "sha256:fbc69bfdc0cb43a5badd5403b126d5151371b5037e0397ba9802bb440c5b0021"},
 ]
 
 [[package]]
@@ -1760,4 +1810,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "3.13.*"
-content-hash = "d99624ff11a0a36d6aeada94078742ef27a91a39144f205d0c0aa9bf58cb6eae"
+content-hash = "c60a17fe3f76edf4af9881b88f9f6b00cf64f223e869969f1a0bb1ee3085a918"

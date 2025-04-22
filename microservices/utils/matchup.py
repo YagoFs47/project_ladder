@@ -1,10 +1,10 @@
-from ast import Index
+from colorama import init, Fore
 from datetime import datetime
 from re import match
 from zoneinfo import ZoneInfo
 from django.conf import settings
 from typing import List
-
+init()
 
 class Matchup:
     """Essa classe representa um jogo, transforma um matchup json em matchup object"""
@@ -49,6 +49,8 @@ class Matchup:
         return False
 
     def implement_detail_live(self, data):
+        print("IMPLEMENTANDO DETALHES DOS JOGOS AO VIVO")
+        print(data)
         self.time_elapsed = data["timeElapsed"]
         self.home_score = data["score"]['home']['score']
         self.away_score = data["score"]['away']['score']
@@ -70,6 +72,10 @@ class Matchup:
                         self.__setattr__(back_lay_string[c][d], str(data.get("markets")[0].get("runners")[c].get("prices")[d].get("odds")))
                     except IndexError:
                         pass
+
+    def __repr__(self):
+        return f'[{Fore.GREEN}ID {self.id}{Fore.RESET}][{Fore.GREEN}NOME {self.name}{Fore.RESET}][{Fore.GREEN}TIME {self.formated_start}{Fore.RESET}][{Fore.GREEN}STATUS {self.status}{Fore.RESET}][{Fore.GREEN}SPORT {self.sport}{Fore.RESET}]'
+
 
 
 class ManageMatchups:

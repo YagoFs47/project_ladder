@@ -143,8 +143,8 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-from httpx import AsyncClient
-from microservices.api.api import Api
+from httpx import AsyncClient, Client
+from microservices.api.api import Api, SyncApi
 from microservices.utils.matchup import ManageMatchups
 
 #PARAMENTROS URL | filtrar por volume sort-by=volume | sort-by='start' | filtrar por esport sport-ids='15,6,7' |
@@ -153,8 +153,10 @@ from microservices.utils.matchup import ManageMatchups
 
 BASE_URL_MEXCHANGE = "https://mexchange-api.bolsadeaposta.bet.br/"
 CLIENT_HTTPX = AsyncClient(base_url=BASE_URL_MEXCHANGE)
+SYNCLIENT_HTTPX = Client(base_url=BASE_URL_MEXCHANGE)
 MANAGE_MATCHUPS = ManageMatchups()
 API_BOLSA_APOSTAS = Api(CLIENT_HTTPX, MANAGE_MATCHUPS)
+SYNCAPI_BOLSA_APOSTAS = SyncApi(SYNCLIENT_HTTPX, MANAGE_MATCHUPS)
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -162,3 +164,6 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = TIME_ZONE
+
+#CELERY BEAT
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
