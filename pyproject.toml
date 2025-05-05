@@ -6,7 +6,7 @@ authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
 readme = "README.md"
-requires-python = "3.13.*"
+requires-python = ">=3.13.2,<4.0"
 dependencies = [
     "django (>=5.2,<6.0)",
     "trio (>=0.29.0,<0.30.0)",
@@ -28,12 +28,42 @@ dependencies = [
     "django-celery-results (>=2.6.0,<3.0.0)",
     "django-celery-beat (>=2.8.0,<3.0.0)",
     "db-sqlite3 (>=0.0.1,<0.0.2)",
-    "pysqlite3 (>=0.5.4,<0.6.0)"
+    "pysqlite3 (>=0.5.4,<0.6.0)",
+    "pyjwt (>=2.10.1,<3.0.0)",
+    "ipython (>=9.2.0,<10.0.0)"
 ]
 
 [tool.poetry]
 packages = [{include = "ladder_project", from = "src"}]
 
+
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.14.1"
+ruff = "^0.11.8"
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+lint = 'ruff check'
+pre_format = 'ruff check --fix'
+format = 'ruff format'
+run = 'python manage.py runserver'
+run_worker = "celery -A ladder_server worker -l info"
+run_beat = "celery -A ladder_server beat"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

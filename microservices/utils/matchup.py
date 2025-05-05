@@ -1,10 +1,11 @@
-from colorama import init, Fore
 from datetime import datetime
-from re import match
-from zoneinfo import ZoneInfo
-from django.conf import settings
 from typing import List
+from zoneinfo import ZoneInfo
+
+from colorama import Fore, init
+
 init()
+
 
 class Matchup:
     """Essa classe representa um jogo, transforma um matchup json em matchup object"""
@@ -43,7 +44,7 @@ class Matchup:
         self.implement_odds_moneyline(json)
 
     def matchup_expired(self) -> bool:
-    
+
         if not self.is_running and datetime.now().astimezone(self.utc) > self.start:
            return True
         return False
@@ -56,7 +57,7 @@ class Matchup:
         self.away_score = data["score"]['away']['score']
 
     def implement_odds_moneyline(self, data):
-        #estrutura json
+        # estrutura json
         if data.get("markets"):
             # markets -> [0] runners -> [0] home -> prices [0] back-odd -> odds = float
             # markets -> [0] runners -> [0] home -> prices [1] lay-odd -> odds = float
@@ -75,7 +76,6 @@ class Matchup:
 
     def __repr__(self):
         return f'[{Fore.GREEN}ID {self.id}{Fore.RESET}][{Fore.GREEN}NOME {self.name}{Fore.RESET}][{Fore.GREEN}TIME {self.formated_start}{Fore.RESET}][{Fore.GREEN}STATUS {self.status}{Fore.RESET}][{Fore.GREEN}SPORT {self.sport}{Fore.RESET}]'
-
 
 
 class ManageMatchups:

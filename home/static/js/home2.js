@@ -27,7 +27,7 @@ function startConnectionWs(){
 
 function openMatchup(matchupId){
     fetch(
-        `http://127.0.0.1:8000/api/markets?event_id=${matchupId}`,
+        `/api/markets?event_id=${matchupId}`,
         {
             headers:{
                 "Content-Type": "application/json",
@@ -71,11 +71,11 @@ function openMarketLayout(marketId, icon){
 
 async function openMatchupLayout(matchupId, icon){
 
-
     const li = document.querySelector(`li[id='${matchupId}']`);
     const matchupDetail = li.querySelector("div.matchup-detail.hidden");
     const matchupDetailActived = li.querySelector("div.matchup-detail.active");
     console.log(li.getAttribute("data-matchup-id"))
+
     if(Boolean(matchupDetail)){
         showSpinnerMatchup(true, matchupId)
         getAllMarkets(li.getAttribute("data-matchup-id"), matchupDetail);
@@ -90,74 +90,6 @@ async function openMatchupLayout(matchupId, icon){
     }
 }
 
-function setMarketExtesion(marketId, eventId){
-    websocket.send(JSON.stringify({
-        message: {
-            "action": "setMarket",
-            "marketId": marketId,
-            "eventId": eventId,
-        }
-    }));
-}
-
-function showSuggestionsBet(data, ladderUl){
-    // Após clicar na ladder, será exibindo uma linha de green e red
-    // referente a tal aposta
-    let ladderItemsEmpty = ladderUl.parentElement.querySelectorAll("li.ladder-item.ladder-item-empty")
-    console.log(data)
-    let marketId;
-    let eventId;
-    let marketValue;
-    let runnerId;
-    let lucroBruto;
-    let oddSelected;
-    let stakeBack = 100;
-    let oddEntradaLay = 100
-
-    if (data.side == "back"){
-        
-
-        // ladderItemsEmpty.forEach(
-        //     (itemElement)=>{
-        //         marketId = itemElement.dataset.marketId;
-        //         eventId = itemElement.dataset.eventId;
-        //         runnerId = itemElement.dataset.runnerId;
-        //         marketValue = itemElement.dataset.marketValue;
-        //         oddLay = parseFloat(itemElement.dataset.oddValue.replace(",", "."));
-        //         oddBack = parseFloat(data.oddValue.replace(",", "."))
-        //         lucroBruto = stakeBack * (oddBack - 1)
-        //         stakeLay = (lucroBruto + stakeBack) / oddLay
-        //         console.log(lucroBruto, stakeBack, oddLay)
-        //         itemElement.textContent = (stakeLay - stakeBack).toFixed(2);
-
-        //     }
-        // )
-    }else{
-        // PEGA O ELEMENTO PAI, E DEPOIS SELECIONA UMA LISTA DE FILHOS
-        // let ladderItemsEmpty = ladderUl.parentElement.querySelectorAll("li.ladder-item.ladder-item-empty")
-        // let ladderItemsOdds = ladderUl.parentElement.querySelectorAll("li.ladder-item.ladder-item-odd")
-        // ladderItemsEmpty.forEach(
-        //     (itemElement)=>{
-        //         oddSelected = parseFloat(itemElement.dataset.oddValue.replace(",", "."));
-        //         lucroBruto = oddEntradaLay / (oddSelected - 1)
-        //         console.log(itemElement.textContent)
-        //         // lucroBruto * (1 - oddSelected/)
-        //     }
-        // )
-
-        // for(var c = 0; c < ladderItemsEmpty.length; c++){
-        //     let possibleOddExit 
-        // }
-
-        
-    }
-
-    
-}
-
-function getCalcOfServer(data, event){
-    console.log(data, event)
-}
 
 
 function sendEventClickLadder(event){
@@ -177,7 +109,7 @@ function sendEventClickLadder(event){
     side = event.dataset.side;
 
     fetch(
-        "http://127.0.0.1:8000/api/markets/",
+        "/api/bet/",
         {
             method: "POST",
             headers: {
@@ -190,7 +122,8 @@ function sendEventClickLadder(event){
                     "runner_id": runnerId,
                     "odd": parseFloat(oddValue.replace(",", ".")),
                     "stake": 1.00,
-                    'side': side
+                    'side': side,
+                    'status': "matched",
                 }
             )
         }
@@ -198,11 +131,11 @@ function sendEventClickLadder(event){
 
     event.textContent = "100";
     // getCalcOfServer(event.dataset, event)
-    showSuggestionsBet(event.dataset, event)
+    // showSuggestionsBet(event.dataset, event)
 
     
     // fetch(
-    //     "http://127.0.0.1:8000/api/bets/",
+    //     "/api/bets/",
     //     {
     //         headers:{
     //             "Content-Type": "application/json"
@@ -273,7 +206,7 @@ async function refreshAllData(){
                 }
             )
 
-            response = await fetch(`http://127.0.0.1:8000/api/markets/prices?event_id=${partidaId}&market_ids=${mercados_ids}`)
+            response = await fetch(`/api/markets/prices?event_id=${partidaId}&market_ids=${mercados_ids}`)
             data_json = await response.json();
             
             for(let c = 0; c < mercados.length; c++){
@@ -286,7 +219,7 @@ async function refreshAllData(){
 
 async function getAllMarkets(matchupId, matchupDetail){
     fetch(
-        `http://127.0.0.1:8000/api/markets?event_id=${matchupId}`,
+        `/api/markets?event_id=${matchupId}`,
         {
             mode: "cors",
             headers: {
@@ -316,7 +249,7 @@ startConnectionWs();
 //     }
 // );
 
-setInterval(refreshAllData, 5000)
+// setInterval(refreshAllData, 5000)
 
 
 

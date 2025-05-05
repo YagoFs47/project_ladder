@@ -75,7 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ladder_server.wsgi.application'
 ASGI_APPLICATION = 'ladder_server.asgi.application'
-#confirgurar um broadcast
+# confirgurar um broadcast
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -144,12 +144,13 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 from httpx import AsyncClient, Client
+
 from microservices.api.api import Api, SyncApi
 from microservices.utils.matchup import ManageMatchups
 
-#PARAMENTROS URL | filtrar por volume sort-by=volume | sort-by='start' | filtrar por esport sport-ids='15,6,7' |
-#FILTRAR POR ORDEM CRESCENTE = sort-direction = 'asc|desc'
-#offset = 0 | per-page=100
+# PARAMENTROS URL | filtrar por volume sort-by=volume | sort-by='start' | filtrar por esport sport-ids='15,6,7' |
+# FILTRAR POR ORDEM CRESCENTE = sort-direction = 'asc|desc'
+# offset = 0 | per-page=100
 
 BASE_URL_MEXCHANGE = "https://mexchange-api.bolsadeaposta.bet.br/"
 CLIENT_HTTPX = AsyncClient(base_url=BASE_URL_MEXCHANGE)
@@ -165,5 +166,5 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = TIME_ZONE
 
-#CELERY BEAT
+# CELERY BEAT
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

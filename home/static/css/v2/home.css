@@ -1,0 +1,48 @@
+/* Esse css estiliza toda a página home page */
+
+*{
+    padding: 0;
+    margin: 0;
+    background-color: #2B3137;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#partidas-block{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#lista-de-jogos{
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    row-gap: 5px;
+}
+
+.partida{
+    font-weight: 600;
+    background-color: #24292e;
+    height: 30px;
+    border: 1px solid #2dba4e;
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 500px;
+}
+
+.title-text, .bi-arrows-angle-expand{
+    font-size: 17px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.title-block{
+    display: flex;
+    flex-direction: row;
+    box-sizing: content-box;
+    background-color: transparent;
+    justify-content: space-between;
+    padding: 5px;
+}
+
