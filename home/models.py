@@ -11,6 +11,7 @@ class ClosingBetModel(models.Model):
         ("matched", "matched"),
         ("matched_closed", "matched_closed"),
     )
+    bet_id = models.IntegerField()
     event_id = models.CharField(max_length=30)
     market_id = models.CharField(max_length=30)
     runner_id = models.CharField(max_length=30)
@@ -52,13 +53,14 @@ class OpeningBetModel(models.Model):
         ("matched_closed", "matched_closed"),
     )
 
+    bet_id = models.IntegerField()
     event_id = models.CharField(max_length=30)
     market_id = models.CharField(max_length=30)
     runner_id = models.CharField(max_length=30)
     side = models.CharField(max_length=4)
-    odd = models.DecimalField(max_digits=8, decimal_places=2)
-    stake = models.DecimalField(max_digits=8, decimal_places=2)
-    responsabilidade = models.DecimalField(max_digits=8, decimal_places=2)
+    odd = models.DecimalField(max_digits=8, decimal_places=4)
+    stake = models.DecimalField(max_digits=8, decimal_places=4)
+    responsabilidade = models.DecimalField(max_digits=8, decimal_places=4)
     status = models.CharField(max_length=14, choices=STATE_CHOICES, default="waiting")
     # closer = models.ForeignKey(ClosingBetModel, on_delete=models.DO_NOTHING, null=True, blank=True)  # FK para o fechamento da aposta
 
@@ -84,6 +86,9 @@ class OpeningBetModel(models.Model):
             "side": self.side,
             "odd": float(self.odd),
             "stake": float(self.stake),
+            "status": self.status,
+            "responsabilidade": self.responsabilidade,
+            "bet_id": self.bet_id
         }
 
 
@@ -109,15 +114,13 @@ class SessionsBolsaApostaModel(models.Model):
 
 class MatchupModel(models.Model):
 
+    id_matchup = models.CharField()
     matchup_name = models.CharField(max_length=150)
-    id_matchup = models.IntegerField()
-    start = models.DateTimeField()
     status = models.CharField(max_length=30)
-    sport = models.CharField(max_length=30)
-    is_running = models.BooleanField(default=False)  # True[ao vivo] False[finalizado]
+    is_running = models.BooleanField(default=False)
     team_a = models.CharField(max_length=30)
     team_b = models.CharField(max_length=30)
-    time_elapsed = models.CharField(max_length=30)
+    time_elapsed = models.CharField(max_length=3)
 
     def to_json(self):
         return {
@@ -137,3 +140,12 @@ class MatchupModel(models.Model):
 
     def __str__(self):
         return f'[{Fore.GREEN}MATCHUP {self.matchup_name}{Fore.RESET}]'
+
+
+class EventIdModel(models.Model):
+    event_id = models.CharField(max_length=50, unique=True)
+
+
+class MarketIdModel(models.Model):
+    market_id = models.CharField(max_length=50)
+    event_id = models.ForeignKey(EventIdModel, on_delete=models.CASCADE)

@@ -14,19 +14,18 @@ app.conf.update(timezone='America/Sao_Paulo')
 app.conf.beat_schedule = {
     'refresh_matchup_db': {
         'task': 'home.tasks.refresh_matchup_db',
-        'schedule': 10,  # executa a cada minuto
+        'schedule': 10,  # executa a cada segundo
     },
     'refresh_tokens': {
         'task': 'home.tasks.verify_state_session_bolsa',
-        'schedule': 60,  # executa a cada minuto
+        'schedule': 10,  # executa a cada segundo
+    },
+    'refresh_ladders': {
+        'task': 'home.tasks.refresh_ladders',
+        'schedule': 5,  # executa a cada segundo
+    },
+    'verify_correspondence': {
+        'task': 'home.tasks.verify_correspondence',
+        'schedule': 5,  # executa a cada segundo
     },
 }
-
-
-@app.task(bind=True)
-def debug_task(self):
-    print(f'Request: {self.request!r}')
-    print(f'Current task: {self.name}')
-    print(f'Current task id: {self.request.id}')
-    print(f'Current task args: {self.request.args}')
-    print(f'Current task kwargs: {self.request.kwargs}')

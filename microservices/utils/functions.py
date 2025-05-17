@@ -1,3 +1,4 @@
+from pprint import pp
 from typing import Dict, List
 
 hash_oposition_side: Dict[str, str] = {
@@ -50,10 +51,11 @@ def compair_odd(dict_odd, price, market):
 def generate_matriz_ladder(markets):
     for market in markets:  # para cada mercado
         odds_ladder: List[dict] = generate_odds_back_lay()  # gera uma ladder vazia
-
+        pp(market['runners'][1]['prices'])
         # precisamos preencher a ladder com as odds que estão atuando naquele mercado
         # para isso preciso varrer as odds do mercado e introduzir elas na ladder
         for dict_odd in odds_ladder:  # para cada odd da ladder
+
             for price in market["runners"][1]["prices"]:  # para cada odd do mercado
                 compair_odd(dict_odd, price, market)
 

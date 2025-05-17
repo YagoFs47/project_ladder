@@ -1,38 +1,96 @@
 
-// let websocket = new WebSocket("ws://127.0.0.1:8000/ws/home/")
 
-setInterval(refreshAllData, 15000)
+function createConnection(){
+    const socket = new WebSocket(
+        `/ws?typeChannel=matchups`,
+    );
 
-function refreshAllData(){
-    fetch("http://localhost:8000/home/").then(
-        (response) => response.text()
-    ).then(
-        (html)=>{
-            document.body.innerHTML = html
-        }
-    )
+    socket.addEventListener("message", (event)=>{
+        console.log(event.data)
+    })
+
 }
 
-function openMatchup(id){
-    console.log("fecthing...")
+function closeLayout(icon, partida_layout){
+    partida_layout.classList.remove("open")
+    icon.classList.replace("bi-arrows-angle-contract", "bi-arrows-angle-expand")
+    partida_layout.querySelector(".markets-list").remove();
+}
+
+function addListenerOnMarketClick(listMarkets){
+    // Adiciona um evento de click ao clickar no mercado para
+    // abrir um nova página e gerar um ladder 
+
+    listMarkets.querySelectorAll("li").forEach((li)=>{
+        li.addEventListener("click", (event)=>{
+            window.open(`/ladders/${event.target.dataset.eventId}/${event.target.dataset.marketId}`,)
+            console.log(event.target.dataset)
+        })
+    })
+}
+
+async function openLayout(icon, partida_layout){  
+    partida_layout.classList.add("open")
+    icon.classList.replace("bi-arrows-angle-expand", "bi-arrows-angle-contract")
+    let eventId = partida_layout.dataset.eventId
+    // Buscar os mercados daquele jogo
     fetch(
-        `http://localhost:8000/api/markets/${id}`,
+        `/api/markets/${eventId}`,
         {
-            method: "get",
+            method: "GET",
+            headers: {
+                Accept: "text/html",
+                "Content-Type": "application/json",
+            },
         }
-    ).then(
-        (response) => response.json()
-    ).then((data)=>{
-        window.open(`https://bolsadeaposta.bet.br/b/exchange/sport/soccer/event/${id}/market/${data.markets[0].id}`, "_blank")
-        window.open(`http://localhost:8000/home/${id}`, "_blank")
+
+    ).then((response)=>response.text()).then(
+        (html)=>{
+            // partida_layout.innerHTML += html
+            const parser = new DOMParser()
+            const doc = parser.parseFromString(html, "text/html")
+            const listMarkets = doc.body.querySelector("ul")
+            // const marketsList = partida_layout.querySelector(".markets-list")
+            // if (marketsList){
+            //     partida_layout.replaceChild(marketsList, newMarketsList)
+            //     return;
+            // }
+
+            addListenerOnMarketClick(listMarkets)
+            partida_layout.insertAdjacentElement("beforeend", listMarkets)
+
+        }
+    )
+
+
+}
+
+function controlLayoutMatchup(event){
+    hash_control_layout = {
+        true: openLayout,
+        false: closeLayout
+    }
+
+    let partidaNodeElement = event.target.closest(".partida")
+    let icon = partidaNodeElement.querySelector(".title-block").querySelector("i")
+
+    hash_control_layout[icon.classList[1] == "bi-arrows-angle-expand"](icon, partidaNodeElement)
+}
+
+function addListenerExpandLayoutMatchup(){
+    // Adiciona um evento na icone da partida que faz abrir o card
+    // para pode exibir os mercados daquela partida
+
+    let icons = document.querySelectorAll(".bi-arrows-angle-expand")
+    let partidas = document.querySelectorAll(".title-block")
+    partidas.forEach(partida => {
+        partida.addEventListener("click", controlLayoutMatchup)
     });
 
-        // {
-        //     message: {
-        //         action: "new_page", 
-        //         id_matchup: id,
-        //         page_direction: "home_page"
-        //     }
-        // }
+    // icons.forEach(icon => {
+    //     icon.addEventListener("click", controlLayoutMatchup)
+    // });
+}
 
-};
+addListenerExpandLayoutMatchup();
+createConnection();

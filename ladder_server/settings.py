@@ -91,9 +91,17 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ladderdb',
+        'USER': 'postgres',
+        'PASSWORD': 'Thifler47!',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -158,6 +166,7 @@ SYNCLIENT_HTTPX = Client(base_url=BASE_URL_MEXCHANGE)
 MANAGE_MATCHUPS = ManageMatchups()
 API_BOLSA_APOSTAS = Api(CLIENT_HTTPX, MANAGE_MATCHUPS)
 SYNCAPI_BOLSA_APOSTAS = SyncApi(SYNCLIENT_HTTPX, MANAGE_MATCHUPS)
+
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'

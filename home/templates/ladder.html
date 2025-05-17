@@ -1,57 +1,58 @@
 {% load pool_extras %}
 
-<!-- <ul class="matchup-markets">
-    {% for market in markets.markets %}
-        {% if market.name == 'Total' %}
-            <li id="{{market.id}}" class="market-item" data-market-id="{{market.id}}" data-event-id="{{market|get_item:'event-id'}}">
-                <span class="title-market">
-                    {{market.name}} {{market.handicap}}
-                </span>
-                <div class="market-detail hidden">
-                    <ul class="market-ladder hidden">
-                        {% for ladder_item in market.ladder %}
-                            <li 
-                                class="ladder-item ladder-item-lay" 
-                                data-odd-value="{{ladder_item.odd}}" 
-                                data-market-value="{{market.handicap}}" 
-                                data-event-id="{{market|get_item:'event-id'}}"
-                                data-market-id="{{market.id}}"
-                                data-side="lay"
-                                data-runner-id="{{market.runners.1.id}}"
-                                onclick="sendEventClickLadder(this)">
-                                {{ladder_item.back}}
-                            </li>
-                            <li 
-                            class="ladder-item ladder-item-odd" 
-                            data-odd-value="{{ladder_item.odd}}" 
-                            data-market-value="{{market.handicap}}" 
-                            data-market-id="{{market.id}}"
-                            data-runner-id="{{market.runners.1.id}}">
-                                {{ladder_item.odd}}
-                            </li>
-                            <li 
-                                class="ladder-item ladder-item-back" 
-                                data-odd-value="{{ladder_item.odd}}" 
-                                data-side="back"
-                                data-event-id="{{market|get_item:'event-id'}}"
-                                data-market-value="{{market.handicap}}" 
-                                data-market-id="{{market.id}}"
-                                data-runner-id="{{market.runners.1.id}}"
-                                onclick="sendEventClickLadder(this)">
-                                {{ladder_item.lay}}
-                            </li>
-                            <li class="ladder-item ladder-item-empty" 
-                                data-odd-value="{{ladder_item.odd}}" 
-                                data-market-value="{{market.handicap}}" 
-                                data-event-id="{{market|get_item:'event-id'}}"
-                                data-market-id="{{market.id}}"
-                                data-runner-id="{{market.runners.1.id}}">
-                            </li>
-                        {% endfor %}
-                    </ul>
-
-                </div>
-            </li>
-        {% endif %}
-    {% endfor %}
-</ul> -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/ladder.css">
+    <script src="/static/js/ladder.js" defer>
+    </script>
+    <title>{{matchup.matchup_name}}</title>
+</head>
+<body>
+    <main id="ladder-block">
+        <h1 id="title-matchup">{{matchup.matchup_name}} - {{market.handicap}}</h1>
+        <ul id="ladder-items">
+            {% for ladder_item in market.ladder %}
+                <li 
+                    class="ladder-item ladder-item-lay" 
+                    data-odd-value="{{ladder_item.odd}}" 
+                    data-market-value="{{market.handicap}}" 
+                    data-event-id="{{market|get_item:'event-id'}}"
+                    data-market-id="{{market.id}}"
+                    data-side="lay"
+                    data-runner-id="{{market.runners.1.id}}">
+                    {{ladder_item.back}}
+                </li>
+                <li 
+                    class="ladder-item ladder-item-odd" 
+                    data-odd-value="{{ladder_item.odd_text}}" 
+                    data-market-value="{{market.handicap}}" 
+                    data-market-id="{{market.id}}"
+                    data-runner-id="{{market.runners.1.id}}">
+                    {{ladder_item.odd}}
+                </li>
+                <li 
+                    class="ladder-item ladder-item-back" 
+                    data-odd-value="{{ladder_item.odd}}" 
+                    data-side="back"
+                    data-event-id="{{market|get_item:'event-id'}}"
+                    data-market-value="{{market.handicap}}" 
+                    data-market-id="{{market.id}}"
+                    data-runner-id="{{market.runners.1.id}}"
+                    >
+                    {{ladder_item.lay}}
+                </li>
+                <li class="ladder-item ladder-item-empty" 
+                    data-odd-value="{{ladder_item.odd}}" 
+                    data-market-value="{{market.handicap}}" 
+                    data-event-id="{{market|get_item:'event-id'}}"
+                    data-market-id="{{market.id}}"
+                    data-runner-id="{{market.runners.1.id}}">
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

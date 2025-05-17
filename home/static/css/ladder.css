@@ -1,0 +1,82 @@
+
+*{
+    font-family: Helvetica, sans-serif, monospace;
+}
+
+body{
+    background-color: #24292e;
+    padding: 0;
+    margin: 0;
+}
+
+#ladder-block{
+    margin:auto;
+    max-width: 300px;
+}
+
+#ladder-items::-webkit-scrollbar-track{
+    background-color: transparent;
+    background-color: #24292e;
+    width: 5px;
+
+
+}
+
+#ladder-items::-webkit-scrollbar{
+    background-color: transparent;
+    background-color: #24292e;
+    width: 5px;
+
+}
+
+#ladder-items::-webkit-scrollbar-thumb{
+    background-color: #F2BC1B;
+    border-radius: 10px;
+    width: 5px;
+}
+
+#ladder-items{
+    background-color: #273240;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    list-style: none;
+    color: white;
+    padding: 0;
+    overflow-y: scroll;
+    height: 600px;
+}
+
+.ladder-item:hover{
+    background-color: #F2BC1B;
+    cursor: pointer;
+}
+
+.ladder-item{
+    background-color: transparent;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid white;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.ladder-item-lay{
+    background-color: #D989A6;
+}
+
+.ladder-item-back{
+    background-color: #57AAF2;
+}
+
+.ladder-item-odd{
+    background-color: #5A668C;
+}
+
+#title-matchup{
+    font-size: 18px;
+    color: white;
+    text-align: center;
+}

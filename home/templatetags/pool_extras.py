@@ -19,3 +19,8 @@ def get_name_radio(dictionary, key):
 def available_amount(dictionary, key):
     amount = dictionary.get(key)
     return f"R${float(amount):.0f}"
+
+
+@register.filter(name="get_exists_market")
+def get_exists_market(markets):
+    return bool(markets)

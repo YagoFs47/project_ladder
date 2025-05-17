@@ -1,3 +1,7 @@
+from http.client import HTTPException
+
+import json
+
 from datetime import datetime
 from http import HTTPStatus
 
@@ -5,7 +9,6 @@ from httpx import Client
 from jwt import decode
 
 from home.models import SessionsBolsaApostaModel
-
 
 class BolsaAposta:
     headers_bolsa = {
@@ -17,11 +20,13 @@ class BolsaAposta:
         "sec-ch-ua-platform": "Windows",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
     }
+    
     HEADERS_EXCHANGE = {
       "Origin": "https://mexchange.bolsadeaposta.bet.br",
       "Accept": "application/json",
+      "Content-Type": "application/json",
       "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
-      "Priority": "u=1, i",
+      "Priority": "u=0, i",
       "Sec-Ch-Ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
       "Sec-Ch-Ua-Mobile": "?0",
       "Sec-Ch-Ua-Platform": "\"Windows\"",
@@ -30,12 +35,16 @@ class BolsaAposta:
       "Sec-Fetch-Site": "same-site",
       "Cookie": "",
       "Referer": "https://mexchange.bolsadeaposta.bet.br/",
-      "Referrer-Policy": "strict-origin-when-cross-origin"
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "method": "POST",
+      "credentials": "include",
+      "mode": "cors",
     }
     DEVICE_TOKEN_173565 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJZYWdvRnJlaXJlIiwiZXhwIjoxNzQ1Nzg2NzczLCJ1bmlxdWUiOiJ4QlFoeTM3UiJ9.q2VE08apbnPqExI4TvSAUpehB2-tA9xZQvPywPXNmS_hX9uJQc1HvjahMauyf-MV1Vwr_kHEL0Uv9l_Vh4QIzg"
 
     def __init__(self, client: Client):
         self.client = client
+        self.verify_tokens()
 
     def login(self):
         """FAZ O LOGIN NO SERVIDOR DA BOLSA DE APOSTAS"""
@@ -113,27 +122,30 @@ class BolsaAposta:
             self.login()
 
     def verify_tokens(self):
+        print("Verificando token")
         # VERIFICA SE EXISTE ALGUM TOKEN NO BANCO DE DADOS
-        if SessionsBolsaApostaModel.objects.count() > 0:  # EXISTE
-            # SÃO VÁLIDOS ?
-            tokens_model = SessionsBolsaApostaModel.objects.first()
-            self.verify_exp_token(tokens_model=tokens_model)
-            # VERIFICA SE OS COOKIES SÃO VÁLIDOS
-            # SE O CÓDIGO DE STATUS FOR 200, OS COOKIES SÃO VÁLIDOS
-            # SE O CÓDIGO DE STATUS FOR 401, OS COOKIES NÃO SÃO VÁLIDOS
-            # SE O CÓDIGO DE STATUS FOR 403, OS COOKIES NÃO SÃO VÁLIDOS
-            # SE O CÓDIGO DE STATUS FOR 500, OS COOKIES NÃO SÃO VÁLIDOS
-            self.set_cookies_of_model(tokens_model)
-            # test_session = self.client.get(
-            #     url="https://mexchange-api.bolsadeaposta.bet.br/api/offers?offset=0&per-page=200",
-            #     headers=self.HEADERS_EXCHANGE,
-            # )
+        if not SessionsBolsaApostaModel.objects.count() > 0:  # EXISTE
+            self.login()
+        
+        # SÃO VÁLIDOS ?
+        tokens_model = SessionsBolsaApostaModel.objects.first()
+        self.verify_exp_token(tokens_model=tokens_model)
+        # VERIFICA SE OS COOKIES SÃO VÁLIDOS
+        # SE O CÓDIGO DE STATUS FOR 200, OS COOKIES SÃO VÁLIDOS
+        # SE O CÓDIGO DE STATUS FOR 401, OS COOKIES NÃO SÃO VÁLIDOS
+        # SE O CÓDIGO DE STATUS FOR 403, OS COOKIES NÃO SÃO VÁLIDOS
+        # SE O CÓDIGO DE STATUS FOR 500, OS COOKIES NÃO SÃO VÁLIDOS
+        self.set_cookies_of_model(tokens_model)
+        # test_session = self.client.get(
+        #     url="https://mexchange-api.bolsadeaposta.bet.br/api/offers?offset=0&per-page=200",
+        #     headers=self.HEADERS_EXCHANGE,
+        # )
 
-            # if test_session.status_code == 200:
-            #     print("\033[36mOs cookies são válidos\033[m")
-            #     return True
+        # if test_session.status_code == 200:
+        #     print("\033[36mOs cookies são válidos\033[m")
+        #     return True
 
-    def get_google(self,):
+    def get_google(self):
         """PEGA INFORMAÇÕES DO GOOGLE PARA PODER VALIDAR NO SERVIDOR DA BOLSA DE APOSTAS"""
         response = self.client.get("https://cloudflare.com/cdn-cgi/trace")
         form_google = response.read().decode().split("\n")
@@ -143,5 +155,21 @@ class BolsaAposta:
         form_google["latitude"] = None
         return form_google
 
-    def verify_correspondence(self):
-        return self.client.get(url="https://mexchange-api.bolsadeaposta.bet.br/api/offers?offset=0&per-page=200", headers=self.HEADERS_EXCHANGE).json()
+    def get_checkout(self):
+        response = self.client.get(url="https://mexchange-api.bolsadeaposta.bet.br/api/offers?offset=0&per-page=200", headers=self.HEADERS_EXCHANGE)
+        if response.status_code != HTTPStatus.OK:
+            raise HTTPException(response.status_code, "Houve um erro em buscar o checkout")
+    
+        return response.json()
+
+    def send_bet(self, payload):
+        response = self.client.post(
+            "https://mexchange-api.bolsadeaposta.bet.br/api/offers",
+            headers=self.HEADERS_EXCHANGE,
+            data=json.dumps(payload)
+        )
+        
+        # quando a aposta não funciona, ele retorna um erro 401 [UNAUTHORIZED]
+        if response.status_code == HTTPStatus.OK:
+            return response.json()
+

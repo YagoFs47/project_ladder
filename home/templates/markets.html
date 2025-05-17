@@ -1,0 +1,18 @@
+<!-- para exibir a lista de mercados -->
+{% load pool_extras %}
+
+<ul class="markets-list">
+
+
+    {% if not markets|get_exists_market %}
+        <p class="info-markets"><i class="bi bi-info-circle"></i> Não existe nenhum mercado para essa partida</p>
+    {% endif %}
+    
+    {% for market in markets %}
+        {% if market.status == "suspended" or market.status == "closed" %}
+            <li class="market-item-list disabled" data-market-id="{{market.id}}" data-event-id="{{event_id}}">{{ market.name }} - {{ market.handicap}}</li>
+        {% else %}
+            <li class="market-item-list" data-market-id="{{market.id}}" data-event-id="{{event_id}}">{{ market.name }} - {{ market.handicap}}</li>
+        {% endif %}
+    {% endfor %}
+</ul>

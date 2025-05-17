@@ -1,4 +1,5 @@
 from decimal import Decimal
+
 """
 Não existe uma 'gerar_stake_resposabilidade LAY'
 pois para entrar em back ou lay, são estratégias diferentes
@@ -9,7 +10,7 @@ para entrar em lay, o valor de aposta é a própria responsabilidade
 """
 
 
-def gerar_stake_responsabilidade_BACK(responsabilidade: float|Decimal, odd_entrada: float|Decimal):
+def gerar_stake_responsabilidade_BACK(responsabilidade: float | Decimal, odd_entrada: float | Decimal):
     """
     [entrada]
     params: responsabilidade: float
@@ -20,10 +21,11 @@ def gerar_stake_responsabilidade_BACK(responsabilidade: float|Decimal, odd_entra
     e gera um valor de saída que a STAKE, valor que será apostado
     na casa de apostas.
     """
-    return round(responsabilidade / (odd_entrada - 1), 2)
+    print(f"stake gerada {responsabilidade / (odd_entrada - 1)}")
+    return round(responsabilidade / (odd_entrada - 1), 4)
 
 
-def sair_em_responsabilidade_BACK_LAY(stake:float|Decimal, odd_entrada:float|Decimal, odd_saida:float|Decimal) -> float:
+def sair_em_responsabilidade_BACK_LAY(stake: float | Decimal, odd_entrada: float | Decimal, odd_saida: float | Decimal) -> float:
     """
     [saída]
     params: stake: float
@@ -41,4 +43,4 @@ def sair_em_responsabilidade_BACK_LAY(stake:float|Decimal, odd_entrada:float|Dec
     odd_entrada = float(stake)
     odd_saida = float(stake)
     hedge = ((stake * (odd_entrada - 1)) + stake) / odd_saida
-    return round(hedge, 2)  # hedge
+    return round(hedge, 4)  # hedge

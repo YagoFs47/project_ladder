@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/static/css/markets.css">
+    {% block links %}
+    {% endblock %}
+    <script src="/static/js/home.js" defer></script>
+    <title>HomePage - LADDER</title>
+</head>
+<body>
+    <header id="header-block">
+        <nav id="navigation-block">
+            <h1>Ladder's Vitorel</h1>
+        </nav>
+    </header>
+    <main id="partidas-block">
+        <ul id="lista-de-jogos">
+            <h1 id="title-partidas">Partidas ao Vivo</h1>
+            {% for event in events %}
+                <li class="partida" data-event-id="{{event.id_matchup}}">
+                    <div class="title-block">
+                        <h2 class="title-text">{{event.time_elapsed}} - {{event.matchup_name}}'</h2>
+                        <i class="bi bi-arrows-angle-expand"></i>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

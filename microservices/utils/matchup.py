@@ -33,8 +33,10 @@ class Matchup:
     markets = []
 
     def __init__(self, json):
+        self.qtd_participants = len(json['event-participants'])
         self.id = json["id"]
         self.name = json["name"]
+        print(json['name'])
         self.team_a, self.team_b = json["name"].split(" vs ")
         self.start = datetime.fromisoformat(json["start"])
         self.formated_start = self.start.astimezone(self.sp).strftime("%d/%m/%Y %H:%M")
@@ -43,18 +45,8 @@ class Matchup:
         self.is_running = json["in-running-flag"]
         self.implement_odds_moneyline(json)
 
-    def matchup_expired(self) -> bool:
-
-        if not self.is_running and datetime.now().astimezone(self.utc) > self.start:
-           return True
-        return False
-
-    def implement_detail_live(self, data):
-        print("IMPLEMENTANDO DETALHES DOS JOGOS AO VIVO")
-        print(data)
-        self.time_elapsed = data["timeElapsed"]
-        self.home_score = data["score"]['home']['score']
-        self.away_score = data["score"]['away']['score']
+    def is_live(self):
+        return self.qtd_participants == 2 and self.is_runnig
 
     def implement_odds_moneyline(self, data):
         # estrutura json
