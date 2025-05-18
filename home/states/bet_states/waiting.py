@@ -1,5 +1,5 @@
-from home.states.manager_states import ManagerState
-from home.states.matched import Matched
+from home.states.bet_states.manager_states import ManagerState
+from home.states.bet_states.matched import Matched
 
 class Waiting(ManagerState):
     

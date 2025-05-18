@@ -43,8 +43,16 @@ class BolsaAposta:
     DEVICE_TOKEN_173565 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJZYWdvRnJlaXJlIiwiZXhwIjoxNzQ1Nzg2NzczLCJ1bmlxdWUiOiJ4QlFoeTM3UiJ9.q2VE08apbnPqExI4TvSAUpehB2-tA9xZQvPywPXNmS_hX9uJQc1HvjahMauyf-MV1Vwr_kHEL0Uv9l_Vh4QIzg"
 
     def __init__(self, client: Client):
-        self.client = client
-        self.verify_tokens()
+        self.client = Client()
+        # self.set_cookies_from_db()
+        # self.verify_tokens()
+
+    def set_cookies_from_db(self):
+        """Requisita os tokens no banco de dados
+          e já salva na constante HEADERS_EXCHANGE"""
+        all_cookies = SessionsBolsaApostaModel.objects.all()
+        if all_cookies.exists():
+            self.set_cookies_of_model(all_cookies.first())
 
     def login(self):
         """FAZ O LOGIN NO SERVIDOR DA BOLSA DE APOSTAS"""
@@ -90,7 +98,7 @@ class BolsaAposta:
     def refresh_token(self, tokens_model: SessionsBolsaApostaModel):
         print("REFRESH TOKENS")
         refresh = self.client.post(url="https://bolsadeaposta.bet.br/client/api/auth/refresh", headers=self.HEADERS_EXCHANGE)
-
+       
         if refresh.status_code == HTTPStatus.FORBIDDEN:
             return False
 
@@ -107,7 +115,7 @@ class BolsaAposta:
     def set_cookies_of_model(self, model: SessionsBolsaApostaModel):
         self.HEADERS_EXCHANGE['Cookie'] = f'BIAB_CUSTOMER={model.biab_customer};Authorization={model.authorization};sb={model.sb};'
 
-    def verify_exp_token(self, tokens_model: SessionsBolsaApostaModel):
+    def get_exp_token(self, tokens_model: SessionsBolsaApostaModel):
         payload = decode(tokens_model.biab_customer, algorithms=['HS512'], options={"verify_signature": False})
         exp = payload.get("exp")
         time_exp_token = datetime.fromtimestamp(exp)
@@ -124,26 +132,29 @@ class BolsaAposta:
     def verify_tokens(self):
         print("Verificando token")
         # VERIFICA SE EXISTE ALGUM TOKEN NO BANCO DE DADOS
-        if not SessionsBolsaApostaModel.objects.count() > 0:  # EXISTE
-            self.login()
-        
-        # SÃO VÁLIDOS ?
-        tokens_model = SessionsBolsaApostaModel.objects.first()
-        self.verify_exp_token(tokens_model=tokens_model)
-        # VERIFICA SE OS COOKIES SÃO VÁLIDOS
-        # SE O CÓDIGO DE STATUS FOR 200, OS COOKIES SÃO VÁLIDOS
-        # SE O CÓDIGO DE STATUS FOR 401, OS COOKIES NÃO SÃO VÁLIDOS
-        # SE O CÓDIGO DE STATUS FOR 403, OS COOKIES NÃO SÃO VÁLIDOS
-        # SE O CÓDIGO DE STATUS FOR 500, OS COOKIES NÃO SÃO VÁLIDOS
-        self.set_cookies_of_model(tokens_model)
-        # test_session = self.client.get(
-        #     url="https://mexchange-api.bolsadeaposta.bet.br/api/offers?offset=0&per-page=200",
-        #     headers=self.HEADERS_EXCHANGE,
-        # )
 
-        # if test_session.status_code == 200:
-        #     print("\033[36mOs cookies são válidos\033[m")
-        #     return True
+
+
+        # if not SessionsBolsaApostaModel.objects.count() > 0:  # EXISTE
+        #     self.login()
+        
+        # # SÃO VÁLIDOS ?
+        # tokens_model = SessionsBolsaApostaModel.objects.first()
+        # self.verify_exp_token(tokens_model=tokens_model)
+        # # VERIFICA SE OS COOKIES SÃO VÁLIDOS
+        # # SE O CÓDIGO DE STATUS FOR 200, OS COOKIES SÃO VÁLIDOS
+        # # SE O CÓDIGO DE STATUS FOR 401, OS COOKIES NÃO SÃO VÁLIDOS
+        # # SE O CÓDIGO DE STATUS FOR 403, OS COOKIES NÃO SÃO VÁLIDOS
+        # # SE O CÓDIGO DE STATUS FOR 500, OS COOKIES NÃO SÃO VÁLIDOS
+        # self.set_cookies_of_model(tokens_model)
+        # # test_session = self.client.get(
+        # #     url="https://mexchange-api.bolsadeaposta.bet.br/api/offers?offset=0&per-page=200",
+        # #     headers=self.HEADERS_EXCHANGE,
+        # # )
+
+        # # if test_session.status_code == 200:
+        # #     print("\033[36mOs cookies são válidos\033[m")
+        # #     return True
 
     def get_google(self):
         """PEGA INFORMAÇÕES DO GOOGLE PARA PODER VALIDAR NO SERVIDOR DA BOLSA DE APOSTAS"""
@@ -172,4 +183,6 @@ class BolsaAposta:
         # quando a aposta não funciona, ele retorna um erro 401 [UNAUTHORIZED]
         if response.status_code == HTTPStatus.OK:
             return response.json()
+
+
 

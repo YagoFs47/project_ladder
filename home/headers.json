@@ -1,0 +1,30 @@
+{
+    "headers_exchange": {
+        "Origin": "https://mexchange.bolsadeaposta.bet.br",
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Priority": "u=0, i",
+        "Sec-Ch-Ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": "\"Windows\"",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "Cookie": "",
+        "Referer": "https://mexchange.bolsadeaposta.bet.br/",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "method": "POST",
+        "credentials": "include",
+        "mode": "cors"
+    },
+    "headers_bolsa": {
+        "origin": "https://bolsadeaposta.bet.br",
+        "accept": "application/json, text/plain, */*",
+        "referer": "https://bolsadeaposta.bet.br/",
+        "sec-ch-ua": "'Google Chrome';v='135', 'Not-A.Brand';v='8', 'Chromium';v='135'",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36"
+    }
+}

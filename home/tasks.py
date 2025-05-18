@@ -19,7 +19,7 @@ from home.models import (
 from microservices.api.api import SyncApi
 from microservices.bolsa.interface import BolsaAposta
 from microservices.utils.event import Event
-from home.bets.bet import Bet
+from home.bet import Bet
 
 client: Client = settings.SYNCLIENT_HTTPX
 api: SyncApi = settings.SYNCAPI_BOLSA_APOSTAS
@@ -112,46 +112,47 @@ def refresh_ladders(self):
 
 @shared_task(bind=True)
 def verify_correspondence(self):
-
-    data = bolsa.get_checkout()
     
-    for data_bet in data['offers']:
+    pass
+    # data = bolsa.get_checkout()
+    
+    # for data_bet in data['offers']:
 
-        bet = Bet(data_bet)
+    #     bet = Bet(data_bet)
 
-        if not bet.is_matched():
-            continue
+    #     if not bet.is_matched():
+    #         continue
 
-        flow = FlowModel.objects.get(
-            market_id=bet.get_market_id(),
-            event_Id=bet.get_event_id()
-            )
+    #     flow = FlowModel.objects.get(
+    #         market_id=bet.get_market_id(),
+    #         event_Id=bet.get_event_id()
+    #         )
 
-        if flow.orientation == bet.get_side():
-            bet_model = OpeningBetModel.objects.get(market_id=bet.get_market_id())
-            bet_model.status = bet.MATCHED
+    #     if flow.orientation == bet.get_side():
+    #         bet_model = OpeningBetModel.objects.get(market_id=bet.get_market_id())
+    #         bet_model.status = bet.MATCHED
             
-        else:
-            bet_model = ClosingBetModel.objects.get(market_id=bet.get_market_id())
-            bet_model.status = bet.CLOSED
+    #     else:
+    #         bet_model = ClosingBetModel.objects.get(market_id=bet.get_market_id())
+    #         bet_model.status = bet.CLOSED
         
-        bet_model.save()
+    #     bet_model.save()
         
-        bet_model_suggestions = OpeningBetModel.objects.filter(
-            market_id=bet.get_market_id(),
-            event_id=bet.get_event_id(),
-            status=bet.MATCHED,
-            ).all()
+    #     bet_model_suggestions = OpeningBetModel.objects.filter(
+    #         market_id=bet.get_market_id(),
+    #         event_id=bet.get_event_id(),
+    #         status=bet.MATCHED,
+    #         ).all()
 
-        #TODO -> Enviar a lista de apostas correspondidas para a ladder aberta via websockets
-        async_to_sync(
-            channel_layer.group_send,
-            f"{bet.get_event_id()}-{bet.get_market_id()}",
-            {
-                    "type": "ladder.suggestions",
-                    "data": [bms.to_json() for bms in bet_model_suggestions]
-            }
-        )
+    #     #TODO -> Enviar a lista de apostas correspondidas para a ladder aberta via websockets
+    #     async_to_sync(
+    #         channel_layer.group_send,
+    #         f"{bet.get_event_id()}-{bet.get_market_id()}",
+    #         {
+    #                 "type": "ladder.suggestions",
+    #                 "data": [bms.to_json() for bms in bet_model_suggestions]
+    #         }
+    #     )
 
 
             

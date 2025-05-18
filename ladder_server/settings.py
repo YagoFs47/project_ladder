@@ -103,6 +103,14 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'ladderdb',  # O nome do seu banco de dados de produção
+    #     'USER': 'postgres',     # O usuário com permissão de acesso
+    #     'PASSWORD': 'Thifler47!', # A senha do usuário
+    #     'HOST': '31.97.20.167', # O endereço IP ou nome do host do servidor
+    #     'PORT': '5432',                    # A porta do PostgreSQL (geralmente 5432)
+    # }
 }
 
 

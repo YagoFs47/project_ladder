@@ -110,6 +110,11 @@ class SessionsBolsaApostaModel(models.Model):
     biab_customer = models.CharField(max_length=500)  # ID do cliente na bolsa de apostas
     authorization = models.CharField(max_length=500)  # Token de autorização do cliente na bolsa de apostas
     sb = models.CharField(max_length=500)  # Token de sessão do cliente na bolsa de apostas
+    device_token = models.CharField(max_length=500)  # Token de sessão do cliente na bolsa de apostas
+
+
+    def to_list(self):
+        return [self.biab_customer, self.authorization, self.sb]
 
 
 class MatchupModel(models.Model):

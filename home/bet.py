@@ -5,9 +5,9 @@ essa classe irá receber os dados da aposta criada na Bolsa, e também irá rece
 da aposta do nosso banco de dados, ou seja, uma instância de Open
 """
 from typing import Union
-from home.states.waiting import Waiting
-from home.states.closed import Closed
-from home.states.matched import Matched
+from home.states.bet_states.waiting import Waiting
+from home.states.bet_states.closed import Closed
+from home.states.bet_states.matched import Matched
 
 
 class Bet:

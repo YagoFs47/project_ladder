@@ -1,4 +1,4 @@
-from home.states.manager_states import ManagerState
+from home.states.bet_states.manager_states import ManagerState
 
 
 class Closed(ManagerState):

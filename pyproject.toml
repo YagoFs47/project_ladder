@@ -31,7 +31,8 @@ dependencies = [
     "pysqlite3 (>=0.5.4,<0.6.0)",
     "pyjwt (>=2.10.1,<3.0.0)",
     "ipython (>=9.2.0,<10.0.0)",
-    "psycopg2-binary (>=2.9.10,<3.0.0)"
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "dotenv (>=0.9.9,<0.10.0)"
 ]
 
 [tool.poetry]

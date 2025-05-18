@@ -11,7 +11,7 @@ from home.api.schemas import BetSchema
 from home.tasks import bolsa
 from microservices.bolsa.interface import BolsaAposta
 from home.utils import check_or_create_flow, create_bet_bolsa
-from home.bets.bet import Bet
+from home.bet import Bet
 
 router = Router()
 bolsa_a: BolsaAposta = bolsa
