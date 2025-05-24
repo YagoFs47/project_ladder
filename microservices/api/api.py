@@ -1,11 +1,11 @@
+import json
+from http.client import HTTPException
 from json import JSONDecodeError
 
 from httpx import AsyncClient, Client
-from http.client import HTTPException
 
-from microservices.utils.matchup import ManageMatchups, Matchup
 from microservices.utils.event import Event
-import json
+from microservices.utils.matchup import ManageMatchups, Matchup
 
 
 class Api:
@@ -103,12 +103,12 @@ class SyncApi:
         self.manager_matchups = manager_matchups
 
     def get_all_matchups(self):
-        
-        response = self.client.get(self.PATH_GET_ALLMATCHUPS, timeout=None) # requisitando os jogos na api
-        
+
+        response = self.client.get(self.PATH_GET_ALLMATCHUPS, timeout=None)  # requisitando os jogos na api
+
         data = response.json()
         ids_to_request_more_detail = str()
-        
+
         with open("data.json", "w") as file:
             json.dump(data, file, indent=4)
         for data_json in data['events']:
@@ -118,18 +118,17 @@ class SyncApi:
                 # self.all_matchups.append(matchup)
 
         # filter_lambda = lambda event: len(event['event-participants']) == 2 and event['in-running-flag'] == True # filtrando os eventos que jogos e não ligar ou outros exportes
-        
+
         self.all_matchups = []
 
-
-        detail_matchups = self.client.get(self.PATH_INPLAY_INFO, timeout=None) # requisitar na api detalhes dos jogos ao vivo
+        detail_matchups = self.client.get(self.PATH_INPLAY_INFO, timeout=None)  # requisitar na api detalhes dos jogos ao vivo
         detail_matchups = detail_matchups.json()
-        
+
         all_matchups_sorted = sorted(
-            self.all_matchups, 
+            self.all_matchups,
             key=lambda event: event.start
-            ) # criar uma regra de ordem entre os jogos por horar de incio da partida de forma crescente
-        
+            )  # criar uma regra de ordem entre os jogos por horar de incio da partida de forma crescente
+
         # self.implement_detail_live_event(all_matchups_sorted, detail_matchups) # self.manager_matchups.set_matchups(all_matchups_sorted)
 
         return all_matchups_sorted

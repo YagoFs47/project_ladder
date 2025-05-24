@@ -1,45 +1,29 @@
-from time import sleep
 from typing import List
 
 from asgiref.sync import async_to_sync
 from celery import shared_task
 from channels.layers import get_channel_layer
 from django.conf import settings
-from httpx import Client
 
+from home.auth_bolsa.auth_manager import AuthProccess
 from home.models import (
     EventIdModel,
     MarketIdModel,
     MatchupModel,
-    FlowModel,
-    OpeningBetModel,
-    ClosingBetModel
+    SessionsBolsaApostaModel,
 )
-
 from microservices.api.api import SyncApi
-from microservices.bolsa.interface import BolsaAposta
 from microservices.utils.event import Event
-from home.bet import Bet
 
-client: Client = settings.SYNCLIENT_HTTPX
 api: SyncApi = settings.SYNCAPI_BOLSA_APOSTAS
-bolsa = BolsaAposta(client)
 channel_layer = get_channel_layer()
-
-
-@shared_task(bind=True)
-def my_task(self):
-    for c in range(10):
-        sleep(1)
-        print(c)
-
-    return "Task completed"
+auth_proccess = AuthProccess()
 
 
 @shared_task(bind=True)
 def verify_state_session_bolsa(self):
-    print("Executando e verificando state_session")
-    bolsa.verify_tokens()
+    # identificar um paradeiro de session
+    auth_proccess.proccess(SessionsBolsaApostaModel.objects.first())
 
 
 @shared_task(bind=True)
@@ -56,7 +40,6 @@ def refresh_matchup_db(self):
 
     for event in events:
         matchup = MatchupModel.objects.filter(id_matchup=event.get_id())
-        events_json.append(event.to_json())
         if not matchup.exists():
             MatchupModel.objects.create(
                 id_matchup=event.get_id(),
@@ -70,6 +53,14 @@ def refresh_matchup_db(self):
             continue
         matchup.update(time_elapsed=event.get_time())
 
+    for matchup_model in matchups_model:
+        for event in events:
+            if event.compair_id(matchup_model.id_matchup):
+                events_json.append(event.to_json())
+                break
+        else:
+            matchup_model.delete()
+
     async_to_sync(channel_layer.group_send)(
             "matchups",
             {
@@ -77,13 +68,6 @@ def refresh_matchup_db(self):
                 "data": events_json
             }
         )
-
-    for matchup_model in matchups_model:
-        for event in events:
-            if event.compair_id(matchup_model.id_matchup):
-                break
-        else:
-            matchup_model.delete()
 
 
 @shared_task(bind=True)
@@ -112,10 +96,10 @@ def refresh_ladders(self):
 
 @shared_task(bind=True)
 def verify_correspondence(self):
-    
+
     pass
     # data = bolsa.get_checkout()
-    
+
     # for data_bet in data['offers']:
 
     #     bet = Bet(data_bet)
@@ -131,13 +115,13 @@ def verify_correspondence(self):
     #     if flow.orientation == bet.get_side():
     #         bet_model = OpeningBetModel.objects.get(market_id=bet.get_market_id())
     #         bet_model.status = bet.MATCHED
-            
+
     #     else:
     #         bet_model = ClosingBetModel.objects.get(market_id=bet.get_market_id())
     #         bet_model.status = bet.CLOSED
-        
+
     #     bet_model.save()
-        
+
     #     bet_model_suggestions = OpeningBetModel.objects.filter(
     #         market_id=bet.get_market_id(),
     #         event_id=bet.get_event_id(),
@@ -153,8 +137,3 @@ def verify_correspondence(self):
     #                 "data": [bms.to_json() for bms in bet_model_suggestions]
     #         }
     #     )
-
-
-            
-        
-    

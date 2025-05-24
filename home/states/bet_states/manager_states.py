@@ -1,8 +1,12 @@
-class ManagerState:
-    pass
+from abc import ABC, abstractmethod
 
-    def matcher(self):
+
+class ManagerState(ABC):
+
+    @abstractmethod
+    def matcher(self) -> None:
         pass
-        
-    def closer(self):
+
+    @abstractmethod
+    def closer(self) -> None:
         pass

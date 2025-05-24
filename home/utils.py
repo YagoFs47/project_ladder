@@ -1,9 +1,11 @@
-from home.models import FlowModel, OpeningBetModel, ClosingBetModel
 from django.db.models import Q
+
+from home.models import ClosingBetModel, FlowModel, OpeningBetModel
 from microservices.utils.formulas import (
     gerar_stake_responsabilidade_BACK,
     sair_em_responsabilidade_BACK_LAY,
 )
+
 
 async def check_or_create_flow(payload):
     if await FlowModel.objects.filter(
@@ -25,8 +27,8 @@ async def check_or_create_flow(payload):
     return flow
 
 
-async def create_bet_bolsa(payload:dict, flow: FlowModel, data_response:dict) -> None:
-    if flow.orientation == payload.get("side"): # back - back
+async def create_bet_bolsa(payload: dict, flow: FlowModel, data_response: dict) -> None:
+    if flow.orientation == payload.get("side"):  # back - back
         model_bet = OpeningBetModel(
             **payload,
             bet_id=data_response['id']

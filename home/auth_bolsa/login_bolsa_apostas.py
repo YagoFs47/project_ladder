@@ -1,45 +1,54 @@
-from httpx import Client
-from home.models import SessionsBolsaApostaModel
-from django.conf import settings
 import json
-from home.schemas import CookieBolsaApostas, PayloadLoginBolsaApostas
-from jwt import encode, decode
 from http import HTTPStatus
 from http.client import HTTPException
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
+from django.conf import settings
+from httpx import Client
+
+from home.models import SessionsBolsaApostaModel
+from home.schemas.schemas_bolsa_login import (
+    CookieBolsaApostas,
+    PayloadLoginBolsaApostas,
+)
+
+"""Classe obsoleta!"""
+
 
 class BolsaApostasLogin:
     _CookieSchema: CookieBolsaApostas
     _HEADERS: dict
+    client = Client
 
     def __init__(self, client: Client):
-        self.client = Client()
-        # self.start()
+        self.client = client
 
-    def start(self) -> None:
-        if (not SessionsBolsaApostaModel.objects.exists()): # se não existir nada no banco de dados):
+    def _load_cookies(self) -> CookieBolsaApostas:
+        if SessionsBolsaApostaModel.objects.all().count() > 0:
+            self._CookieSchema = CookieBolsaApostas.model_validate(
+                SessionsBolsaApostaModel.objects.all().first()
+                )
+            return self._CookieSchema
+
+    def proccess(self) -> None:
+        if not self._load_cookies():
             self._login()
-        
-        self._CookieSchema = CookieBolsaApostas.model_validate(SessionsBolsaApostaModel.objects.first())
-        
-        match self._validate_token(CookieBolsaApostas.model_validate(SessionsBolsaApostaModel.objects.first())):
+
+        match self._validate_token(self._CookieSchema):
             case "expired":
                 self._login()
-            
+
             case "need_review":
                 self._refresh_tokens(self._CookieSchema)
-        
+
         print("\033[33;7m Os tokens são válidos ou foram atualizados \033[m")
 
     def _refresh_tokens(self, cookies: CookieBolsaApostas):
         print("\033[35;7m Atualizando o token \033[m")
+
         self._load_headers("headers_bolsa")
         self._HEADERS['cookie'] = cookies.tokens_to_string()
         refresh = self.client.post(
-            url="https://bolsadeaposta.bet.br/client/api/auth/refresh", 
+            url="https://bolsadeaposta.bet.br/client/api/auth/refresh",
             headers=self._HEADERS
             )
 
@@ -51,8 +60,9 @@ class BolsaApostasLogin:
                 biab_customer=self.client.cookies.get("BIAB_CUSTOMER"),
                 sb=self.client.cookies.get("sb"))
             SessionsBolsaApostaModel.objects.all().update(**self._CookieSchema.model_dump())
+
             print("\033[36;7m Tokens atualizados \033[m")
-            
+
     def _load_headers(self, headers_name) -> None:
         with open(f"{settings.BASE_DIR}/home/headers.json") as headers_file:
             self._HEADERS = json.load(headers_file)[headers_name]
@@ -61,12 +71,12 @@ class BolsaApostasLogin:
         """para determinar se o token é válido, é só pegar as datas de expiração"""
         if cookies.is_expired("authorization"):
             return "expired"
-        
+
         elif cookies.is_need_token_renew("authorization"):
             return "need_review"
-        
+
         return "valid"
-        
+
     def _login(self) -> None:
         print("\033[33;7m Fazendo login \033[m")
         google_form = self.get_google_cloudflare()
@@ -74,18 +84,18 @@ class BolsaApostasLogin:
         payload = PayloadLoginBolsaApostas(
             ipDto=google_form,
             )
-        
+
         print(payload.model_dump())
-        
+
         response = self.client.post(
             cookies={
                 "DEVICE_TOKEN_173565": self._CookieSchema.device_token,
-                "BIAB_LANGUAGE":"PT_BR",
+                "BIAB_LANGUAGE": "PT_BR",
                 "BIAB_TZ": "180",
-                "twk_idm_key":"M4S2qIsUiCVbgOOWyDKY6",
-                "BIAB_CURRENCY":"BRL",
-                "TawkConnectionTime":"0",
-                "C_U_I":""
+                "twk_idm_key": "M4S2qIsUiCVbgOOWyDKY6",
+                "BIAB_CURRENCY": "BRL",
+                "TawkConnectionTime": "0",
+                "C_U_I": ""
             },
             headers=self._HEADERS,
             url="https://bolsadeaposta.bet.br/client/api/auth/login",
@@ -94,12 +104,15 @@ class BolsaApostasLogin:
         # recycledApprovalId
         if response.status_code == HTTPStatus.OK:
             print("\033[33;7m Deu bom \033[m")
-            SessionsBolsaApostaModel.objects.all().update(**CookieBolsaApostas(
+            self._CookieSchema = CookieBolsaApostas(
                 authorization=response.cookies.get("Authorization"),
                 biab_customer=response.cookies.get("BIAB_CUSTOMER"),
-                sb=response.cookies.get("sb"),
-                ).model_dump())
-            
+                sb=response.cookies.get("sb"))
+
+            SessionsBolsaApostaModel.objects.update(
+                **self._CookieSchema.model_dump()
+                )
+
         # raise HTTPException(response.status_code, "Não foi possível realizar o login")
 
     def get_google_cloudflare(self) -> dict:

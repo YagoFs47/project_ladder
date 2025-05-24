@@ -18,7 +18,7 @@ class Event:
     _score_away: str
     _status: str
 
-    def __init__(self, json:dict):
+    def __init__(self, json: dict):
         self._minute = json.get("timeElapsed")
         self._status = json.get("status")
         self._name_home = json.get("score").get("home").get("name")
@@ -29,22 +29,22 @@ class Event:
 
     def get_id(self):
         return self._event_id
-    
+
     def get_matchup_name(self):
         return f"{self._name_home} X {self._name_away}"
 
     def get_home_name(self):
         return self._name_home
-    
+
     def get_away_name(self):
         return self._name_away
-    
+
     def get_time(self):
         return self._minute
-    
+
     def get_score_home(self):
         return self._score_home
-    
+
     def get_score_away(self):
         return self._score_away
 

@@ -1,14 +1,13 @@
-from http.client import HTTPException
-
 import json
-
 from datetime import datetime
 from http import HTTPStatus
+from http.client import HTTPException
 
 from httpx import Client
 from jwt import decode
 
 from home.models import SessionsBolsaApostaModel
+
 
 class BolsaAposta:
     headers_bolsa = {
@@ -20,7 +19,7 @@ class BolsaAposta:
         "sec-ch-ua-platform": "Windows",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
     }
-    
+
     HEADERS_EXCHANGE = {
       "Origin": "https://mexchange.bolsadeaposta.bet.br",
       "Accept": "application/json",
@@ -98,7 +97,7 @@ class BolsaAposta:
     def refresh_token(self, tokens_model: SessionsBolsaApostaModel):
         print("REFRESH TOKENS")
         refresh = self.client.post(url="https://bolsadeaposta.bet.br/client/api/auth/refresh", headers=self.HEADERS_EXCHANGE)
-       
+
         if refresh.status_code == HTTPStatus.FORBIDDEN:
             return False
 
@@ -133,11 +132,9 @@ class BolsaAposta:
         print("Verificando token")
         # VERIFICA SE EXISTE ALGUM TOKEN NO BANCO DE DADOS
 
-
-
         # if not SessionsBolsaApostaModel.objects.count() > 0:  # EXISTE
         #     self.login()
-        
+
         # # SÃO VÁLIDOS ?
         # tokens_model = SessionsBolsaApostaModel.objects.first()
         # self.verify_exp_token(tokens_model=tokens_model)
@@ -170,7 +167,7 @@ class BolsaAposta:
         response = self.client.get(url="https://mexchange-api.bolsadeaposta.bet.br/api/offers?offset=0&per-page=200", headers=self.HEADERS_EXCHANGE)
         if response.status_code != HTTPStatus.OK:
             raise HTTPException(response.status_code, "Houve um erro em buscar o checkout")
-    
+
         return response.json()
 
     def send_bet(self, payload):
@@ -179,10 +176,7 @@ class BolsaAposta:
             headers=self.HEADERS_EXCHANGE,
             data=json.dumps(payload)
         )
-        
+
         # quando a aposta não funciona, ele retorna um erro 401 [UNAUTHORIZED]
         if response.status_code == HTTPStatus.OK:
             return response.json()
-
-
-
