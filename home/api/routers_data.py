@@ -4,12 +4,15 @@ from http import HTTPStatus
 from django.core.handlers.asgi import ASGIRequest
 from django.http import JsonResponse
 from ninja import Router
+from zoneinfo import ZoneInfo
 
 from home.bets.bets_manager import BetManager
 from home.schemas.bet_schemas import BetPayloadSchema, BetSchema
 from home.models import BetModel
 from datetime import datetime
 
+
+UTC = ZoneInfo("UTC")
 router = Router()
 bet_manager = BetManager()
 
@@ -17,10 +20,20 @@ bet_manager = BetManager()
 async def create_bet(request: ASGIRequest, data: BetPayloadSchema):
     # bet_schema: BetSchema = bet_manager.send_bet(data)
     created_at = datetime.now()
-    data_dict = data.model_dump(exclude="keep_in_play")
-    data_dict.update({"created_at": created_at})
-    print(data_dict)
-    BetModel(**data_dict).save()
+    data_dict = data.model_dump(exclude="keep_in_play", by_alias=True)
+    data_dict.update(
+            {
+            'id': '123',
+            'created-at': datetime.now(tz=UTC).isoformat(),
+            'stake-matched': data_dict['stake'],
+            'partial_stake': data_dict['stake']
+            }
+        )
+    bet = BetSchema(
+        **data_dict
+    )
+    
+    # BetModel(**data_dict).save()
     
     # data_response = bolsa_a.send_bet(
     #     payload={
@@ -30,9 +43,7 @@ async def create_bet(request: ASGIRequest, data: BetPayloadSchema):
     #     }
     # )
 
-    # if data_response: # Salva as informações no banco de dados
-    #     flow = await check_or_create_flow(payload)
-    #     await create_bet_bolsa(payload, flow, data_response['offers'][0])
-    #     return JsonResponse(status=200, data={})
-
-    return JsonResponse(status=HTTPStatus.UNAUTHORIZED, data={"detail": "Algo deu errado!"})
+    return JsonResponse(
+        status=HTTPStatus.UNAUTHORIZED, 
+        data={"detail": "Algo deu errado!"}
+        )

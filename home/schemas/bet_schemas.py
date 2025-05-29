@@ -13,7 +13,8 @@ class BetSchema(BaseModel):
         serialization_alias="odd")
     side: str
     stake: float
-    stake_matched: str = Field(validation_alias="stake-matched")
+    stake_matched: float = Field(validation_alias="stake-matched")
+    partial_stake: float
     status: str
     created_at: datetime = Field(validation_alias="created-at")
 
@@ -25,7 +26,7 @@ class BetPayloadSchema(BaseModel):
     side: str
     odd: float = Field(serialization_alias="odds")
     stake: float
-    status: str
+    status: str = Field(default="open")
     keep_in_play: bool = Field(
         serialization_alias="keep-in-play",
         default=True)

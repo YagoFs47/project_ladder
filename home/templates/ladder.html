@@ -14,7 +14,45 @@
     <main id="ladder-block">
         <h1 id="title-matchup">{{matchup.matchup_name}} - {{market.handicap}}</h1>
         <ul id="ladder-items">
-            {% for ladder_item in market.ladder %}
+            {% for odd in ladder.prices %}
+                <li 
+                    class="ladder-item ladder-item-lay" 
+                    data-odd-value="{{odd.odd}}" 
+                    data-market-value="{{odd.handicap}}" 
+                    data-event-id="{{matchup.id_matchup}}"
+                    data-market-id="{{ladder.market_id}}"
+                    data-side="lay"
+                    data-runner-id="{{ladder.runner_under_id}}">
+                    {{odd.back}}
+                </li>
+                <li 
+                    class="ladder-item ladder-item-odd" 
+                    data-odd-value="{{odd.odd}}" 
+                    data-market-value="{{ladder.handicap}}" 
+                    data-market-id="{{ladder.market_id}}"
+                    data-runner-id="{{ladder.runner_under_id}}">
+                    {{odd.odd}}
+                </li>
+                <li 
+                    class="ladder-item ladder-item-back" 
+                    data-odd-value="{{odd.odd}}" 
+                    data-side="back"
+                    data-event-id="{{matchup.id_matchup}}"
+                    data-market-value="{{ladder.handicap}}" 
+                    data-market-id="{{ladder.market_id}}"
+                    data-runner-id="{{ladder.runner_under_id}}"
+                    >
+                    {{odd.lay}}
+                </li>
+                <li class="ladder-item ladder-item-empty" 
+                    data-odd-value="{{odd.odd}}" 
+                    data-market-value="{{ladder.handicap}}" 
+                    data-event-id="{{matchup.id_matchup}}"
+                    data-market-id="{{ladder.market_id}}"
+                    data-runner-id="{{ladder.runner_under_id}}">
+                </li>
+            {% endfor %}
+            <!-- {% for ladder_item in market.ladder %}
                 <li 
                     class="ladder-item ladder-item-lay" 
                     data-odd-value="{{ladder_item.odd}}" 
@@ -51,7 +89,7 @@
                     data-market-id="{{market.id}}"
                     data-runner-id="{{market.runners.1.id}}">
                 </li>
-            {% endfor %}
+            {% endfor %} -->
         </ul>
     </main>
 </body>

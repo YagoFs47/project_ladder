@@ -30,8 +30,11 @@ async def get_detail_market(request: ASGIRequest, event_id: str):
         return render(request=request, template_name="markets.html", context={"markets": total_markets, "event_id": event_id})
 
 
-@router.get("/prices")
-async def get_prices(request, market_ids: str, event_id: str):
-    markets_with_prices = await API.get_market_with_prices(event_id=event_id, market_ids=market_ids)
-    generate_matriz_ladder(markets_with_prices['markets'])
-    return JsonResponse({"event_info": markets_with_prices})
+# @router.get("/prices")
+# async def get_prices(request, market_ids: str, event_id: str):
+#     markets_with_prices = await API.get_market_with_prices(event_id=event_id, market_ids=market_ids)
+
+#     markets_with_prices['markets']
+#     print('\033[31m AQUI \033[m')
+
+#     return JsonResponse({"event_info": markets_with_prices})

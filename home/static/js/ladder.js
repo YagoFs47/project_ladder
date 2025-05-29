@@ -65,11 +65,11 @@ function onCLickLadder(li){
             },
             body: JSON.stringify(
                 {   
-                    "event_id": eventId,
-                    "market_id": marketId,
                     "runner_id": runnerId,
-                    "odds": parseFloat(oddValue.replace(",", ".")),
-                    "stake": 1.00,
+                    "market_id": marketId,
+                    "event_id": eventId,
+                    "odd": parseFloat(oddValue.replace(",", ".")),
+                    "stake": 10.00,
                     'side': side,
                     "keep_in_play": false
                 }
