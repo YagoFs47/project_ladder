@@ -41,7 +41,7 @@ def refresh_matchup_db(self):
     """
 
     api: SyncApi = settings.SYNCAPI_BOLSA_APOSTAS
-    events: List[Event] = api.get_live_matchups()
+    events: List[Event] = api.get_live_matchups2()
     matchups_model = list(MatchupModel.objects.all())
     events_json = []
 

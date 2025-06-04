@@ -191,6 +191,16 @@ function addLadderListenClick(){
     })
 }
 
+function scroolToMoney(){
+    document.querySelectorAll(".ladder-item-back").forEach(li=>{
+        if(li.textContent.trim() != "0"){
+            li.scrollIntoView()
+            }
+        }
+    )
+}
+
 createConnection();
+scroolToMoney();
 addLadderListenClick();
 addListenerDefaultStakes();

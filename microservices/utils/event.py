@@ -19,13 +19,20 @@ class Event:
     _status: str
 
     def __init__(self, json: dict):
-        self._minute = json.get("timeElapsed")
-        self._status = json.get("status")
-        self._name_home = json.get("score").get("home").get("name")
-        self._name_away = json.get("score").get("away").get("name")
-        self._score_home = json.get("score").get("home").get("score")
-        self._score_away = json.get("score").get("away").get("score")
-        self._event_id = json.get('eventId')
+        self._minute = 0
+        self._status = json['status']
+        self._name_home = json['event-participants'][0]['participant-name']
+        self._name_away = json['event-participants'][1]['participant-name']
+        self._score_home = 0
+        self._score_away = 0
+        self._event_id = json.get('id')
+        # self._minute = json.get("timeElapsed")
+        # self._status = json.get("status")
+        # self._name_home = json.get("score").get("home").get("name")
+        # self._name_away = json.get("score").get("away").get("name")
+        # self._score_home = json.get("score").get("home").get("score")
+        # self._score_away = json.get("score").get("away").get("score")
+        # self._event_id = json.get('eventId')
 
     def get_id(self):
         return self._event_id

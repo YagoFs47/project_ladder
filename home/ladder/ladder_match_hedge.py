@@ -66,7 +66,7 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
 
         for bet in bets:
             if stake_apostas.get(bet.odd):
-                stake_apostas[bet.odd] += bet.stake
+                stake_apostas[bet.odd] += bet.stake_matched
                 continue
             stake_apostas.update({bet.odd : bet.stake})
 

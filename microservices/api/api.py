@@ -7,6 +7,10 @@ from httpx import AsyncClient, Client
 from microservices.utils.event import Event
 from microservices.utils.matchup import ManageMatchups, Matchup
 
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+SP = ZoneInfo("America/Sao_Paulo")
 
 class Api:
     """essa classe é uma interface de interação com a api da bolsa de apostas bet"""
@@ -101,6 +105,7 @@ class SyncApi:
     # PATH_GET_EVENTSNOW = "https://bolsadeaposta.bet.br/client/api/jumper/feedSports/inplayInfo/eventsNow"
     PATH_INPLAY_INFO = "https://bolsadeaposta.bet.br/client/api/jumper/feedSports/inplay-info?eventIds="
     LIVE_MATCHUPS_URL = "https://bolsadeaposta.bet.br/client/api/jumper/feedSports/inplay-info"
+    TODAY_MATCHUPS = "https://mexchange-api.bolsadeaposta.bet.br/api/events?offset=0&per-page=100&tag-url-names=soccer&sort-by=start&sort-direction=asc"
     DEVICE_TOKEN_173565 = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJZYWdvRnJlaXJlIiwiZXhwIjoxNzQ1Nzg2NzczLCJ1bmlxdWUiOiJ4QlFoeTM3UiJ9.q2VE08apbnPqExI4TvSAUpehB2-tA9xZQvPywPXNmS_hX9uJQc1HvjahMauyf-MV1Vwr_kHEL0Uv9l_Vh4QIzg"
 
     all_matchups: list = []
@@ -140,6 +145,22 @@ class SyncApi:
 
         return all_matchups_sorted
 
+    def get_live_matchups2(self):
+        response = self.client.get(self.TODAY_MATCHUPS)
+        
+        if response.status_code != 200:
+            raise HTTPException(response.status_code, "A busca pelo jogos não funcinou!")
+        
+        events = []
+        live = filter(
+            lambda event: 
+            event['status'] == "open" and 
+            event['in-running-flag'] and
+            len(event['event-participants']) == 2,
+            response.json()['events'])
+        events = [Event(event) for event in live]
+        return events
+
     def get_live_matchups(self):
         response = self.client.get(self.LIVE_MATCHUPS_URL)
 
@@ -147,7 +168,7 @@ class SyncApi:
             raise HTTPException(response.status_code, "A busca pelo jogos não funcinou!")
 
         events = [Event(event) for event in response.json()]
-
+        
         return events
 
     def get_market_with_prices(self, event_id, market_ids) -> dict:
