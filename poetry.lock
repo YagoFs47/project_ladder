@@ -697,6 +697,17 @@ files = [
 Django = ">=3.2,<6.0"
 
 [[package]]
+name = "docopt"
+version = "0.6.2"
+description = "Pythonic argument parser, that will make you smile"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
+]
+
+[[package]]
 name = "dotenv"
 version = "0.9.9"
 description = "Deprecated package"
@@ -743,6 +754,20 @@ humanize = "*"
 prometheus-client = ">=0.8.0"
 pytz = "*"
 tornado = ">=5.0.0,<7.0.0"
+
+[[package]]
+name = "gitignore"
+version = "0.0.8"
+description = "gitignore command generates .gitingore files from the command line."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "gitignore-0.0.8.tar.gz", hash = "sha256:fc74214c6bec2a241a43efd45bc4028500352b5d928f35a4ffd1c3ed59187642"},
+]
+
+[package.dependencies]
+docopt = ">=0.6.2"
 
 [[package]]
 name = "h11"
@@ -847,6 +872,18 @@ files = [
 
 [package.extras]
 all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
+
+[[package]]
+name = "ignr"
+version = "2.2"
+description = "Python command line client to download.gitignore templates from gitignore.io"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "ignr-2.2-py3-none-any.whl", hash = "sha256:e8b6276aedab79b066d795e6e4b3f7b4c5668b68bf50a6c4fbf2b0cd17dda1db"},
+    {file = "ignr-2.2.tar.gz", hash = "sha256:382a81be67a34538a11ff8ab69063419b388cc32f01b4ace599c3f1c06526df4"},
+]
 
 [[package]]
 name = "incremental"
@@ -2303,4 +2340,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13.2,<4.0"
-content-hash = "f13f63a256f01e7c22cf7df99c2b5b01474117a02e7ee7fcb8c5045e4102641a"
+content-hash = "098c340e6ba6e1a8e3eafbbc68db1ed7a72e34f34f9514681b3f9fe8c4867f66"
