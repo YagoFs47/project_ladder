@@ -1,5 +1,53 @@
 
 
+
+
+
+function generateFormSetStake(){
+    // Retorna um elemento Node para adicionar no dom e preencher o valor padrão das stakes
+    const form = document.createElement("form")
+    form.classList.add("form-stake-default")
+    form.setAttribute('action', "/api/stake-default")
+    form.setAttribute('method', "post")
+
+    const stakeDefault = document.createElement("input")
+    stakeDefault.classList.add("input-stake-default")
+    stakeDefault.setAttribute('type', "text")
+    stakeDefault.setAttribute('placeholder', "Ex: 3.50")
+    
+    const saveButton = document.createElement("input")
+    saveButton.classList.add("save-button-stake-default")
+    saveButton.setAttribute('type', "submit")
+    saveButton.setAttribute('value', "salvar")
+
+    const deleteButton = document.createElement("input")
+    deleteButton.classList.add("delete-button-stake-default")
+    deleteButton.setAttribute('type', "button")
+    deleteButton.setAttribute('value', "apagar")
+
+    form.addEventListener("submit", event => {
+        event.preventDefault();
+        let stake = event.target.querySelector("input.input-stake-default").value
+        stake = stake.replace(",", ".")
+        response = fetch("/api/default-stakes", 
+            {
+                method: "post",
+                body: JSON.stringify({stake: stake})
+            }
+        )
+        .then((response)=>location.reload())
+
+            
+
+      
+    })
+
+    form.appendChild(stakeDefault)
+    form.appendChild(saveButton)
+    form.appendChild(deleteButton)
+    return form
+}
+
 function createConnection(){
     const socket = new WebSocket(
         `/ws?typeChannel=matchups`,
@@ -92,5 +140,12 @@ function addListenerExpandLayoutMatchup(){
     // });
 }
 
+function addListenerNewStakeDefaultButton(){
+    document.querySelector(".add-stake-default-button").addEventListener("click", event => {
+        document.querySelector("#stakes-default").appendChild(generateFormSetStake())
+    })
+}
+
+addListenerNewStakeDefaultButton()
 addListenerExpandLayoutMatchup();
 createConnection();

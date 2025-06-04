@@ -163,8 +163,7 @@ from httpx import AsyncClient, Client
 
 from microservices.api.api import Api, SyncApi
 from microservices.utils.matchup import ManageMatchups
-from home.ladder.ladder import Ladder
-from home.ladder.ladder_players_match_odds import LadderPlayersMatchOdds
+
 
 # PARAMENTROS URL | filtrar por volume sort-by=volume | sort-by='start' | filtrar por esport sport-ids='15,6,7' |
 # FILTRAR POR ORDEM CRESCENTE = sort-direction = 'asc|desc'
@@ -176,7 +175,6 @@ SYNCLIENT_HTTPX = Client(base_url=BASE_URL_MEXCHANGE)
 MANAGE_MATCHUPS = ManageMatchups()
 API_BOLSA_APOSTAS = Api(CLIENT_HTTPX, MANAGE_MATCHUPS)
 SYNCAPI_BOLSA_APOSTAS = SyncApi(SYNCLIENT_HTTPX, MANAGE_MATCHUPS)
-LADDER = Ladder(players_odds_interface=LadderPlayersMatchOdds())
 
 
 # Celery settings

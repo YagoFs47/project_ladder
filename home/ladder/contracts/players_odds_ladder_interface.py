@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
-from home.ladder.default_data import ODDS
+from home.ladder.settings_ladder import ODDS
 
 class PlayersOddsLadderInterface(ABC):
     
     @abstractmethod
-    def get_ladder_players_odds(self, markets: dict) -> dict:
+    def get_ladder_players_available_amout(self, markets: dict) -> dict:
         """
-        retorna uma ladder(uma lista de odds), onde e colocando o dinheiro
-        na odd onde contém dinheiro
+        retorna uma ladder(uma lista de odds), onde será incluído o dinheiro
         """
 
     @abstractmethod

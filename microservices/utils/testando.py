@@ -245,20 +245,12 @@ class LadderV2:
             if active.status == "closed":
                 print('SAINDO...')
                 break
+            
             necessary_value = calc.get_necessary_bet(bet_active=active, bet_passive=passive)
-            print(f"{active} FECHANDO ->> {passive}")
-            print(f"{active.partial_stake} FECHANDO ->> {necessary_value}")
+            # print(f"{active} FECHANDO ->> {passive}")
+            # print(f"{active.partial_stake} FECHANDO ->> {necessary_value}")
             
             exp_info = calc.get_level_coberture_info(bet_active=active, bet_passive=passive, value_necessary=necessary_value)
-
-            #cobertura completa
-            exp_info['percent_matched'] == 100
-
-            #under hedge
-            exp_info['percent_matched'] < 100
-
-            #over hedge
-            exp_info['percent_matched'] > 100
 
             if (exp_info['percent_matched'] == 100): # hedge perfeito
                 active.status = "closed"
@@ -266,15 +258,14 @@ class LadderV2:
                 active.liquidity += exp_info["liquidity"]
                 active.partial_stake = passive.partial_stake = 0
 
-
-            elif active.partial_stake < necessary_value: # under hedge
+            elif exp_info['percent_matched'] < 100: # under hedge
                 active.status = "closed"
                 active.partial_stake = 0
                 active.liquidity += exp_info['liquidity']
                 # calcs_exposistion = calc.get_level_under_hedge(bet_passive=passive, bet_active=active, value_necessary=necessary_value)
                 passive.partial_stake = exp_info['exp_rest']
                 
-            elif active.partial_stake > necessary_value: # over hedge
+            elif exp_info['percent_matched'] > 100: # over hedge
                 passive.status = "closed"
                 active.partial_stake = exp_info['over_hedge']
                 active.liquidity += exp_info['liquidity']
@@ -320,6 +311,7 @@ class LadderV2:
 
         text_ladder = ""
         liquidity = sum([aposta.liquidity for aposta in apostas])
+        print(liquidity)
         for odd in odds:
             text_ladder += f"ODD={Fore.YELLOW}{odd:.2f}{Fore.RESET}"
             tot_tick = 0
@@ -329,16 +321,15 @@ class LadderV2:
                 if aposta.side == "back":
                     tick = tick_back_stake(odd_entrada=aposta.odd, odd_saida=odd, stake=aposta.partial_stake)
                     lucro = round(tick - aposta.partial_stake, 2)
-                    tot_tick += tick
-                    tot_lucro += lucro
 
                 else:
                     tick = tick_lay_stake(odd_entrada=aposta.odd, odd_saida=odd, stake=aposta.partial_stake)
                     lucro = round(aposta.partial_stake - tick, 2)
-                    tot_tick += tick
-                    tot_lucro += lucro
+
+                tot_tick += tick
+                tot_lucro += lucro
                 
-                if liquidity < 0:
+                if liquidity + tot_lucro < 0:
                     text_ladder += f" | {Fore.RED}({tick}, {(lucro + liquidity):.2f}){Fore.RESET}"
                     continue
 

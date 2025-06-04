@@ -3,8 +3,9 @@ from home.ladder.contracts.formulas_hedges_interface import FormulasHedgesInterf
 
 class CalcHedgeAdapter(FormulasHedgesInterface):
 
-
-    def get_necessary_bet(self, bet_passive, bet_active):
+    def get_necessary_bet(self, bet_passive=None, bet_active=None, only_odds=False, active_odd=None, passive_odd=None, passive_partial_stake=None):
+        if only_odds:
+            return round(passive_partial_stake * passive_odd / active_odd, 2)
         return round(bet_passive.partial_stake * bet_passive.odd / bet_active.odd, 2)
 
     def get_level_over_hedge(

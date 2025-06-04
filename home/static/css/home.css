@@ -41,18 +41,16 @@ nav#navigation-block > h1{
 
 main#partidas-block{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     margin-top: 20px;
     margin-bottom: 50px;
     margin-top: 8rem;
+    column-gap: 20px;
 }
 
 #lista-de-jogos > h1{
-    font-size: 20px;
-    font-weight: 500;
-    text-align: start;
     margin-bottom: .5rem;
 }
 
@@ -61,6 +59,7 @@ main#partidas-block{
     flex-direction: column;
     list-style: none;
     row-gap: 5px;
+    min-width: 400px;
 }
 
 
@@ -101,8 +100,84 @@ main#partidas-block{
     padding: 5px;
 }
 
+h1.title-block-main{
+    font-weight: 500;
+    font-size: 22px;
+}
+
+div.add-default-stake{
+    display: flex;
+    flex: row;
+    column-gap: 20px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.add-stake-default-button{
+    min-width: 60px;
+    background-color: #0099DD;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    box-shadow: 2px 2px 20px #24292e;
+}
+
+.add-stake-default-button:hover{
+    background-color: #008ac6;
+}
+
 .bi-info-circle{
     color: white;
     margin-right: 5px;
     background-color: transparent;
+}
+
+ul#stakes-default{
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    align-items: center;
+    justify-content: start;
+    min-width: 300px;
+    padding: 10px;
+}
+
+.form-stake-default{
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+}
+
+.input-stake-default{
+    color: white;
+    background-color: #353d45;
+
+}
+
+.save-button-stake-default, .delete-button-stake-default, .input-stake-default{
+    outline: none;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.save-button-stake-default, .delete-button-stake-default{
+    color: white;
+}
+.save-button-stake-default{
+    background-color: #2dba4e;
+}
+.delete-button-stake-default{
+    background-color: #FF4858;
+}
+
+.save-button-stake-default:hover{
+    background-color: #2dba4e98;
+}
+.delete-button-stake-default:hover{
+    background-color: #ff4857b6;
 }

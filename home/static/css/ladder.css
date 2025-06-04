@@ -11,7 +11,7 @@ body{
 
 #ladder-block{
     margin:auto;
-    max-width: 300px;
+    max-width: 400px;
 }
 
 #ladder-items::-webkit-scrollbar-track{
@@ -38,12 +38,13 @@ body{
 #ladder-items{
     background-color: #273240;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr) 2fr;
     list-style: none;
     color: white;
     padding: 0;
     overflow-y: scroll;
     height: 600px;
+    margin-top: 5px;
 }
 
 .ladder-item:hover{
@@ -63,20 +64,75 @@ body{
     
 }
 
-.ladder-item-lay{
+.ladder-item{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ladder-item.odd_color_lay{
     background-color: #D989A6;
 }
 
-.ladder-item-back{
+.ladder-item.odd_color_back{
     background-color: #57AAF2;
 }
 
-.ladder-item-odd{
+.ladder-item-odd.open{
     background-color: #5A668C;
 }
+
+.ladder-item-odd.closed{
+    background-color: #F23030;
+}
+
+.ladder-item-odd.suspended{
+    background-color: #F23030;
+}
+
+.ladder-item.suggestion-middle{
+    color: 	#F2C12E;
+}
+
+.ladder-item.suggestion-positive{
+    color: 	#2dba4e;
+}
+
+.ladder-item.suggestion-negative{
+    color: 	#D989A6;
+}
+
 
 #title-matchup{
     font-size: 18px;
     color: white;
     text-align: center;
+}
+
+#stake-default-list{
+    justify-content: start;
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    column-gap: 2px;
+    padding: 0;
+    margin-bottom: 2px;
+}
+
+li.stake-default-item{
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+    border: 1px solid #D989A6;
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+li.stake-default-item.selected{
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+    border: 1px solid #D989A6;
+    background-color: #D989A6;
+    padding: 5px;
+    border-radius: 3px;
 }

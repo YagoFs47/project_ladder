@@ -19,7 +19,7 @@
     </header>
     <main id="partidas-block">
         <ul id="lista-de-jogos">
-            <h1 id="title-partidas">Partidas ao Vivo</h1>
+            <h1 class="title-block-main">Partidas ao Vivo</h1>
             {% for event in events %}
                 <li class="partida" data-event-id="{{event.id_matchup}}">
                     <div class="title-block">
@@ -27,6 +27,20 @@
                         <i class="bi bi-arrows-angle-expand"></i>
                     </div>
                 </li>
+            {% endfor %}
+        </ul>
+        <ul id="stakes-default">
+            <div class="add-default-stake">
+                <h1 class="title-block-main default-stake">Stakes Padrões</h1>
+                <button class="add-stake-default-button"> <i class="bi bi-plus-circle-fill"></i> </button>
+            </div>
+            {% for stake_default in stakes_defaults %}
+                <form class="form-stake-default form-delete-stake" action="/api/default-stakes/{{ stake_default.id }}" method="post">
+                    {% csrf_token %}
+                    <input class="input-stake-id" type="hidden" value="{{ stake_default.id }}">
+                    <input class="input-stake-default" type="text" value="{{ stake_default.stake }}">
+                    <input class="delete-button-stake-default" type="submit" value="apagar">
+                </form>
             {% endfor %}
         </ul>
     </main>

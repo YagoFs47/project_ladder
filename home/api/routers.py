@@ -7,34 +7,24 @@ from ninja import Router
 
 from microservices.api.api import Api
 from microservices.utils.functions import generate_matriz_ladder
+from http import HTTPStatus
 
 init()
 
 router = Router()
 API: Api = settings.API_BOLSA_APOSTAS
 
-
 @router.get("/{event_id}")
 async def get_detail_market(request: ASGIRequest, event_id: str):
     """Retorna uma lista de dados detalhados sobre cada mercado de um evento"""
-    markets = await API.get_markets(event_id)
+    markets = await API.get_markets(event_id) # requisita por mercados daquela partida
 
-    total_markets = []
-    for index, market in enumerate(markets):
+    if not markets: # se não tiver, retorna uma lista vazia
+        return render(request=request, template_name="markets.html", context={"markets": [], "event_id": event_id})
 
-        if (market["name"] == "Total"):
-            total_markets.append(market)
+    # filtra, pega somente mercados do tipo Over/Under
+    markets = filter(lambda market: market['name'] == "Total", markets)
+    markets = sorted(markets, key=lambda d: d['handicap'])
 
-    total_markets = sorted(total_markets, key=lambda d: d['handicap'])
     if request.content_type == "application/json":
-        return render(request=request, template_name="markets.html", context={"markets": total_markets, "event_id": event_id})
-
-
-# @router.get("/prices")
-# async def get_prices(request, market_ids: str, event_id: str):
-#     markets_with_prices = await API.get_market_with_prices(event_id=event_id, market_ids=market_ids)
-
-#     markets_with_prices['markets']
-#     print('\033[31m AQUI \033[m')
-
-#     return JsonResponse({"event_info": markets_with_prices})
+        return render(request=request, template_name="markets.html", context={"markets": markets, "event_id": event_id})

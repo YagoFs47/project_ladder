@@ -8,33 +8,47 @@ from zoneinfo import ZoneInfo
 
 from home.bets.bets_manager import BetManager
 from home.schemas.bet_schemas import BetPayloadSchema, BetSchema
-from home.models import BetModel
+from home.models import BetModel, SessionsBolsaApostaModel
 from datetime import datetime
+
 
 
 UTC = ZoneInfo("UTC")
 router = Router()
 bet_manager = BetManager()
 
+
 @router.post(path="/")
 async def create_bet(request: ASGIRequest, data: BetPayloadSchema):
-    # bet_schema: BetSchema = bet_manager.send_bet(data)
-    created_at = datetime.now()
     data_dict = data.model_dump(exclude="keep_in_play", by_alias=True)
     data_dict.update(
             {
-            'id': '123',
+            'id': str(datetime.now().timestamp()),
             'created-at': datetime.now(tz=UTC).isoformat(),
-            'stake-matched': data_dict['stake'],
+            'stake-matched': 0,
             'partial_stake': data_dict['stake']
             }
         )
-    bet = BetSchema(
-        **data_dict
+    
+    # bet = BetSchema(
+    #     **data_dict
+    # )
+
+    # await BetModel(
+    #     **bet.model_dump()
+    # ).asave()
+    token = bet_manager.load_auth_tokens(model=await SessionsBolsaApostaModel.objects.afirst())
+    bet_schema = bet_manager.send_bet(
+        paylaod=data,
+        tokens=token
     )
-    
-    # BetModel(**data_dict).save()
-    
+
+    print(bet_schema)
+    if bet_schema:
+        BetModel.objects.acreate(
+            **bet_schema.model_dump(),
+        )
+
     # data_response = bolsa_a.send_bet(
     #     payload={
     #         "odds-type": "DECIMAL",
@@ -43,7 +57,9 @@ async def create_bet(request: ASGIRequest, data: BetPayloadSchema):
     #     }
     # )
 
-    return JsonResponse(
-        status=HTTPStatus.UNAUTHORIZED, 
-        data={"detail": "Algo deu errado!"}
+    return JsonResponse( 
+        data={
+            "status": HTTPStatus.OK,
+            "detail": "Algo deu errado!"
+            },
         )

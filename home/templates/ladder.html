@@ -13,20 +13,32 @@
 <body>
     <main id="ladder-block">
         <h1 id="title-matchup">{{matchup.matchup_name}} - {{market.handicap}}</h1>
+        <ul id="stake-default-list">
+            {% for stake in stakes_defaults %}
+                <li class="stake-default-item">
+                    {{stake.stake}}
+                </li>
+            {% endfor %}
+        </ul>
         <ul id="ladder-items">
             {% for odd in ladder.prices %}
                 <li 
-                    class="ladder-item ladder-item-lay" 
+                    class="ladder-item ladder-item-money {{odd.contains_stake}}"
+                    data-odd-value="{{odd.odd}}">
+                    {{odd.stake}}
+                </li>   
+                <li 
+                    class="ladder-item ladder-item-lay {{ odd.lay_color }}" 
                     data-odd-value="{{odd.odd}}" 
                     data-market-value="{{odd.handicap}}" 
                     data-event-id="{{matchup.id_matchup}}"
                     data-market-id="{{ladder.market_id}}"
                     data-side="lay"
                     data-runner-id="{{ladder.runner_under_id}}">
-                    {{odd.back}}
+                    {{ odd.lay }}
                 </li>
                 <li 
-                    class="ladder-item ladder-item-odd" 
+                    class="ladder-item ladder-item-odd {{market.status}}" 
                     data-odd-value="{{odd.odd}}" 
                     data-market-value="{{ladder.handicap}}" 
                     data-market-id="{{ladder.market_id}}"
@@ -34,7 +46,7 @@
                     {{odd.odd}}
                 </li>
                 <li 
-                    class="ladder-item ladder-item-back" 
+                    class="ladder-item ladder-item-back {{ odd.back_color }}" 
                     data-odd-value="{{odd.odd}}" 
                     data-side="back"
                     data-event-id="{{matchup.id_matchup}}"
@@ -42,15 +54,45 @@
                     data-market-id="{{ladder.market_id}}"
                     data-runner-id="{{ladder.runner_under_id}}"
                     >
-                    {{odd.lay}}
+                    {{ odd.back }}
                 </li>
-                <li class="ladder-item ladder-item-empty" 
-                    data-odd-value="{{odd.odd}}" 
-                    data-market-value="{{ladder.handicap}}" 
-                    data-event-id="{{matchup.id_matchup}}"
-                    data-market-id="{{ladder.market_id}}"
-                    data-runner-id="{{ladder.runner_under_id}}">
-                </li>
+                {% if odd.is_zero %}
+                    <li class="ladder-item ladder-item-suggestion suggestion-middle" 
+                        data-odd-value="{{odd.odd}}" 
+                        data-market-value="{{ladder.handicap}}" 
+                        data-event-id="{{matchup.id_matchup}}"
+                        data-market-id="{{ladder.market_id}}"
+                        data-runner-id="{{ladder.runner_under_id}}"
+                        data-stake-value="{{odd.necessary_stake}}"
+                        data-side="{{odd.side_to_apply_stake}}"
+                        >
+                        {{odd.liquidity_on_hedge}} + {{odd.liquidity}}
+                    </li>
+
+                {% elif odd.is_positive %}
+                    <li class="ladder-item ladder-item-suggestion suggestion-positive" 
+                        data-odd-value="{{odd.odd}}" 
+                        data-market-value="{{ladder.handicap}}" 
+                        data-event-id="{{matchup.id_matchup}}"
+                        data-market-id="{{ladder.market_id}}"
+                        data-runner-id="{{ladder.runner_under_id}}"
+                        data-stake-value="{{odd.necessary_stake}}"
+                        data-side="{{odd.side_to_apply_stake}}">
+                        {{odd.liquidity_on_hedge}} + {{odd.liquidity}}
+                    </li>
+                    
+                {% else %}
+                    <li class="ladder-item ladder-item-suggestion suggestion-negative" 
+                        data-odd-value="{{odd.odd}}" 
+                        data-market-value="{{ladder.handicap}}" 
+                        data-event-id="{{matchup.id_matchup}}"
+                        data-market-id="{{ladder.market_id}}"
+                        data-runner-id="{{ladder.runner_under_id}}"
+                        data-stake-value="{{odd.necessary_stake}}"
+                        data-side="{{odd.side_to_apply_stake}}">
+                        {{odd.liquidity_on_hedge}} + {{odd.liquidity}}
+                    </li>
+                {% endif %}
             {% endfor %}
             <!-- {% for ladder_item in market.ladder %}
                 <li 

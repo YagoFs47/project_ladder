@@ -25,10 +25,16 @@ class Api:
     async def get_markets(self, id_matchup):
         path = f"api/events/{id_matchup}"
         response = await self.client.get(path, timeout=None)
-        data = response.json()
-        markets = data.get("markets")
 
-        return markets
+        if response.status_code != 200:
+            raise HTTPException(response.status_code, "A requisição não funcionou {}".format(response.text))
+
+        try:
+            data = response.json()
+            markets = data.get("markets")
+            return markets
+        except JSONDecodeError as e:
+            return None
 
     async def get_all_matchups(self):
         # requisitando os jogos na api
@@ -82,6 +88,7 @@ class Api:
         response = await self.client.get(path, timeout=None)
         try:
             return response.json()
+        
         except JSONDecodeError:
             pass
 
@@ -146,6 +153,7 @@ class SyncApi:
     def get_market_with_prices(self, event_id, market_ids) -> dict:
         """Essa função retorna o mercado e os preços de todos os mercados"""
         path = f"api/events/{event_id}?market-ids={market_ids}"
+        print('\033[36m {} \033[m'.format(path))
         response = self.client.get(path, timeout=None)
         try:
             return response.json()
