@@ -65,6 +65,7 @@ class AuthProccess(BolsaTokenInterface, HeadersInterface, AuthInterface):
         raise HTTPException(response.status_code, f"Não possível dar refresh no token ->> {response.text}")
 
     def save_tokens(self, model: SessionsBolsaApostaModel, cookies: Cookies) -> None:
+        print(model, cookies)
         tokens = BolsaAuthJwtTokens(
             authorization=cookies.get("Authorization"),
             biab_customer=cookies.get("BIAB_CUSTOMER"),
@@ -82,7 +83,7 @@ class AuthProccess(BolsaTokenInterface, HeadersInterface, AuthInterface):
         print("\033[33;7m Fazendo login \033[m")
         google_form = self.get_google_cloudflare()  # pegando dados do google
         headers = self.load_headers_bolsa()  # carregando headers
-        headers.update({"cookie": f"DEVICE_TOKEN_173565={os.environ.get('DEVICE_TOKEN')}"})  # colocando um token de device
+        headers.update({"cookie": f"DEVICE_TOKEN_{os.environ.get('USER_ID')}={os.environ.get('DEVICE_TOKEN')}"})  # colocando um token de device
         # chamando o endpoint de sessão do bolsa
         response = client.post(
             url=URL(os.environ.get("AUTHENTICATE_BOLSA_URL")),

@@ -97,6 +97,7 @@ def refresh_ladders(self):
             # o(1)
             # market_data.update()
             ladder = async_to_sync(ladder_manager.get_complete_ladder)(market=market_data)
+            
             async_to_sync(channel_layer.group_send)(
                 f"{event.event_id}-{market_data.get('id')}",
                 {

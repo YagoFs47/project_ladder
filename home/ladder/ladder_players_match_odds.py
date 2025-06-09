@@ -23,13 +23,12 @@ class LadderPlayersMatchOdds(PlayersOddsLadderInterface):
         for odd in ODDS:
             exists_back = markets_dict.get("back").get(odd)
             exists_lay = markets_dict.get("lay").get(odd)
-            odd_ladder = {"odd": odd, "back": 0, "lay": 0, "lay_color": "", "back_color": ""}
+            odd_ladder = {"odd": odd, "back": "", "lay": "", "lay_color": "", "back_color": ""}
 
             if exists_back:
                 odd_ladder['lay'] = round(exists_back['available-amount'], 2)
                 odd_ladder['lay_color'] = "odd_color_lay"
 
-                
             if exists_lay:
                 odd_ladder['back'] = round(exists_lay['available-amount'], 2)
                 odd_ladder['back_color'] = "odd_color_back"

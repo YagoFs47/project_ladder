@@ -39,10 +39,18 @@ class Ladder:
             prices['prices'][i].update(suggestion)
 
     async def _proccess_ladder_bets(self, runner_id: str):
+
         bets = [bet async for bet in BetModel.objects.filter(runner_id=runner_id).all().aiterator()]
+
+        #bets = []
+
         bets_schemas = [BetSchema(**bet.to_bet_schema_model()) for bet in bets]
 
+        #bets_schemas = []
+
         suggestions = self.ladder_match_odd_interface.match_hedge_back_lay(bets_schemas)
+
+        # data = {"liquidity": 4.50, "suggestions": [{}, {}, {}, {}]}
 
         for i, bet in enumerate(bets):
             bet.partial_stake = bets_schemas[i].partial_stake

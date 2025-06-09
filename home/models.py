@@ -26,11 +26,11 @@ class SessionsBolsaApostaModel(models.Model):
 class MatchupModel(models.Model):
 
     id_matchup = models.CharField()
-    matchup_name = models.CharField(max_length=150)
-    status = models.CharField(max_length=30)
+    matchup_name = models.CharField(max_length=300)
+    status = models.CharField(max_length=200)
     is_running = models.BooleanField(default=False)
-    team_a = models.CharField(max_length=30)
-    team_b = models.CharField(max_length=30)
+    team_a = models.CharField(max_length=200)
+    team_b = models.CharField(max_length=200)
     time_elapsed = models.CharField(max_length=3)
 
     def to_json(self):

@@ -45,7 +45,7 @@ async def create_bet(request: ASGIRequest, data: BetPayloadSchema):
 
     print(bet_schema)
     if bet_schema:
-        BetModel.objects.acreate(
+        await BetModel.objects.acreate(
             **bet_schema.model_dump(),
         )
 

@@ -16,6 +16,8 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
     def match_hedge_back_lay(self, bets) -> dict:
         """"""
         
+        #bets = []
+
         #faz o hedgeamento e muda os estados e valores parciais de cada objeto
         for active in filter(lambda bet: bet.status == "open", bets):
             passives = filter(lambda bet: (bet.status == "open" and bet.side == self.oposition_side[active.side]), bets)
@@ -62,22 +64,31 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
             print(f'{str(active)} {Fore.YELLOW}FECHANDO{Fore.RESET} {str(passive)}')
 
     def generate_suggestions_hedge(self, bets):
-        stake_apostas = {}
+
+        stake_apostas = dict()
+
 
         for bet in bets:
             if stake_apostas.get(bet.odd):
                 stake_apostas[bet.odd] += bet.stake_matched
                 continue
-            stake_apostas.update({bet.odd : bet.stake})
+            stake_apostas.update({bet.odd : bet.stake_matched})
 
         apostas = list(filter(lambda bet: bet.status == "open", bets))
 
         data = {"liquidity": 0, "suggestions": []}
 
+
         liquidity = sum([aposta.liquidity for aposta in bets])
 
-
         data['liquidity'] = liquidity
+
+        #bets = []
+        # stake_apostas = {}
+        # data = {"liquidity": 0, "suggestions": []}
+        # apostas = []
+        # liquidity = 0
+
         for odd in ODDS:
             tot_tick = 0
             tot_lucro = 0
@@ -105,6 +116,7 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
             
             if apostas:
                 side_exposition = self.oposition_side.get(apostas[0].side)
+                
             else:
                 side_exposition = None
 
@@ -122,4 +134,5 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
                         "exposition_diretion": exposition_direction
                     }
                  )
+        
         return data
