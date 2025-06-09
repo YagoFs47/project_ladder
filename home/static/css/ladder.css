@@ -1,3 +1,10 @@
+@import url(reset-meyer.css);
+@import url(reset-meyer.css);
+
+html{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 62.5%;
+}
 
 *{
     font-family: Helvetica, sans-serif, monospace;
@@ -18,8 +25,6 @@ body{
     background-color: transparent;
     background-color: #24292e;
     width: 5px;
-
-
 }
 
 #ladder-items::-webkit-scrollbar{
@@ -43,8 +48,8 @@ body{
     color: white;
     padding: 0;
     overflow-y: scroll;
-    height: 600px;
-    margin-top: 5px;
+    height: 800px;
+    margin-top: 25px;
 }
 
 .ladder-item:hover{
@@ -54,19 +59,16 @@ body{
 
 .ladder-item{
     background-color: transparent;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 400;
     border: 1px solid white;
-    height: 25px;
+    height: 19px;
     display: flex;
     align-items: center;
     justify-content: center;
-    
 }
 
-.ladder-item{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+    
 
 .ladder-item.odd_color_lay{
     background-color: #D989A6;
@@ -105,6 +107,7 @@ body{
     font-size: 18px;
     color: white;
     text-align: center;
+    margin-top: 1rem;
 }
 
 #stake-default-list{
@@ -120,19 +123,22 @@ body{
 li.stake-default-item{
     color: white;
     font-weight: 500;
-    font-size: 18px;
-    border: 1px solid #D989A6;
+    font-size: 14px;
+    border: 1px solid #D7D989;
     padding: 5px;
     border-radius: 3px;
+    margin-top: 1rem;
     cursor: pointer;
 }
 
 li.stake-default-item.selected{
     color: white;
     font-weight: 500;
-    font-size: 18px;
-    border: 1px solid #D989A6;
-    background-color: #D989A6;
+    font-size: 14px;
+    border: 1px solid #D7D989;
     padding: 5px;
     border-radius: 3px;
+    background-color: #2dba4e;
+    margin-top: 1rem;
+    cursor: pointer;
 }

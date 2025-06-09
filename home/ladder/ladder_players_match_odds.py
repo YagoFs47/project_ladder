@@ -26,11 +26,11 @@ class LadderPlayersMatchOdds(PlayersOddsLadderInterface):
             odd_ladder = {"odd": odd, "back": "", "lay": "", "lay_color": "", "back_color": ""}
 
             if exists_back:
-                odd_ladder['lay'] = round(exists_back['available-amount'], 2)
+                odd_ladder['lay'] = round(exists_back['available-amount'], 0)
                 odd_ladder['lay_color'] = "odd_color_lay"
 
             if exists_lay:
-                odd_ladder['back'] = round(exists_lay['available-amount'], 2)
+                odd_ladder['back'] = round(exists_lay['available-amount'], 0)
                 odd_ladder['back_color'] = "odd_color_back"
 
             ladder['prices'].append(odd_ladder)

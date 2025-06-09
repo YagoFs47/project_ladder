@@ -70,9 +70,19 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
 
         for bet in bets:
             if stake_apostas.get(bet.odd):
+                if bet.status == "waiting":
+                    stake_apostas[bet.odd] += bet.stake
+                    continue
+
                 stake_apostas[bet.odd] += bet.stake_matched
                 continue
+
+            elif bet.status == "waiting":
+                stake_apostas.update({bet.odd : bet.stake_matched})
+                continue
+
             stake_apostas.update({bet.odd : bet.stake_matched})
+
 
         apostas = list(filter(lambda bet: bet.status == "open", bets))
 
@@ -92,7 +102,7 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
         for odd in ODDS:
             tot_tick = 0
             tot_lucro = 0
-          
+
             for aposta in apostas:
                 necesssary_value_bet = CALC.get_necessary_bet(
                     only_odds=True, 
@@ -103,7 +113,7 @@ class LadderMatchHedges(LadderMatchHedgesBackLayInterface):
                 lucro = (necesssary_value_bet - aposta.partial_stake) if aposta.side == "back" else (aposta.partial_stake - necesssary_value_bet)
                 tot_lucro += lucro
                 tot_tick += necesssary_value_bet
-            
+                
 
             if liquidity + tot_lucro > 0:
                 exposition_direction = "suggestions-positive"

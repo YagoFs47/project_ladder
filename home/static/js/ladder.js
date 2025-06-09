@@ -113,7 +113,12 @@ function setSuggetion(data, element){
 }
 
 function showCreatedBetOnLadder(odd, stake){
-    document.querySelector(`li.ladder-item-money[data-odd-value='${odd}']`).textContent = stake;
+    
+    let odd_element = document.querySelector(`li.ladder-item-money[data-odd-value='${odd}']`);
+    let current_value = odd_element.textContent;
+    let new_value = parseFloat(current_value.trim().replace(",", ".")) + stake
+    odd_element.textContent = new_value.toFixed(2);
+
 }
 
 async function sendBet(payload){
@@ -151,13 +156,15 @@ async function onCLickLadder(li){
     if (side == "None" || side == "null"){
         return;
     }
-    
+    console.log('G1')
     let stakeSelected = document.querySelector("li.stake-default-item.selected")
     if (stakeSelected){
         stake = parseFloat(stakeSelected.textContent.trim().replace(",", "."))
+    
     }else if (!li.classList.contains("ladder-item-suggestion") && !li.dataset.stakeValue){
         return;
     }
+    console.log('G2')
 
     if (li.classList.contains("ladder-item-suggestion") && li.dataset.stakeValue){
         stake = parseFloat(li.dataset.stakeValue.replace(",", ".")).toFixed(2);
@@ -192,12 +199,18 @@ function addLadderListenClick(){
 }
 
 function scroolToMoney(){
-    document.querySelectorAll(".ladder-item-back").forEach(li=>{
-        if(li.textContent.trim() != "0"){
-            li.scrollIntoView()
-            }
+    let backs = document.querySelectorAll(".ladder-item-back")
+    let lays = document.querySelectorAll(".ladder-item-back")
+
+    for(let c = 0; c < backs.length; c++){
+        if (backs[c].textContent.trim() != ""){
+            backs[c].scrollIntoView()
+            break;
+        }else if(lays[c].textContent.trim() != ""){
+            lays[c].scrollIntoView()
+            break;
         }
-    )
+    }
 }
 
 createConnection();
